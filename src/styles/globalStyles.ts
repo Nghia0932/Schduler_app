@@ -1,12 +1,13 @@
 import {StyleSheet} from 'react-native';
 import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
 export const globalStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: appColors.white,
   },
   text: {
-    fontFamily: 'Roboto',
+    fontFamily: fontFamilies.regular,
     fontSize: 14,
     color: appColors.text,
   },
