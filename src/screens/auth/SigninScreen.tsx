@@ -14,7 +14,7 @@ import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = ({navigation}: any) => {
+const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(false);
@@ -143,4 +143,4 @@ const LoginScreen = ({navigation}: any) => {
   );
 };
 
-export default LoginScreen;
+export default SigninScreen;

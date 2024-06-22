@@ -1,6 +1,7 @@
 import SplashScreen from './SplashScreen';
-import LoginScreen from './auth/LoginScreen';
+import SigninScreen from './auth/SigninScreen';
 import OnboardingScreen from './auth/OnboardingScreen';
+import SignupScreen from './auth/SignupScreen';
 import HomeScreen from './home/HomeScreen';
 
-export {HomeScreen, LoginScreen, SplashScreen, OnboardingScreen};
+export {HomeScreen, SigninScreen, SplashScreen, OnboardingScreen, SignupScreen};
