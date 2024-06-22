@@ -13,9 +13,9 @@ import React, {ReactNode, useState} from 'react';
 import {EyeSlash} from 'iconsax-react-native';
 
 import {appColors} from '../constants/appColors';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {globalStyle} from '../styles/globalStyles';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 interface Props {
   value: string;
   onChange: (val: string) => void;
@@ -68,7 +68,20 @@ const InputComponent = (props: Props) => {
       <TouchableOpacity
         onPress={
           isPassword ? () => setIsShowPass(!isShowPass) : () => onChange('')
-        }></TouchableOpacity>
+        }>
+        {isPassword ? (
+          <FontAwesome
+            name={isShowPass ? 'eye-slash' : 'eye'}
+            size={22}
+            color={appColors.gray}
+          />
+        ) : (
+          value.length > 0 &&
+          allowClear && (
+            <AntDesign name="close" size={22} color={appColors.text} />
+          )
+        )}
+      </TouchableOpacity>
     </View>
   );
 };

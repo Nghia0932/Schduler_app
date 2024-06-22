@@ -23,7 +23,7 @@ export const globalStyle = StyleSheet.create({
   },
   section: {
     paddingHorizontal: 16,
-    paddingBottom: 20,
+    paddingBottom: 16,
   },
   shadow: {
     shadowColor: 'rgba(0,0,0,0.5)',

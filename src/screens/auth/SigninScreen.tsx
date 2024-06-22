@@ -13,6 +13,7 @@ import {Lock, Sms} from 'iconsax-react-native';
 import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SocialSignin from './components/SocialSignin';
 
 const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -75,7 +76,7 @@ const SigninScreen = ({navigation}: any) => {
           }}>
           <Image
             source={require('../../assets/images/logo1.png')}
-            style={{width: 300, height: 200, marginBottom: 10}}
+            style={{width: 250, height: 150, marginBottom: 10}}
           />
         </SectionComponent>
         <SectionComponent>
@@ -103,7 +104,7 @@ const SigninScreen = ({navigation}: any) => {
           <RowComponent justiffy="space-between">
             <RowComponent onPress={() => setIsRemember(!isRemember)}>
               <Switch
-                trackColor={{true: appColors.primary}}
+                trackColor={{true: appColors.primary, false: appColors.gray}}
                 thumbColor={appColors.white}
                 value={isRemember}
                 onChange={() => setIsRemember(!isRemember)}
@@ -126,7 +127,7 @@ const SigninScreen = ({navigation}: any) => {
             onPress={() => ''}
           />
         </SectionComponent>
-
+        <SocialSignin />
         <SectionComponent>
           <RowComponent justiffy="center">
             <TextComponent text="Don't have an account ?" />
