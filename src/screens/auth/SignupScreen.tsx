@@ -14,6 +14,7 @@ import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Validate} from '../../utils/validate';
+import SocialSignin from './components/SocialSignin';
 
 interface ErrorMessage {
   userName: string;
@@ -204,7 +205,7 @@ const SignupScreen = ({navigation}: any) => {
             onPress={() => {}}
           />
         </SectionComponent>
-
+        <SocialSignin />
         <SectionComponent styles={{top: -15}}>
           <RowComponent justiffy="center">
             <TextComponent text="Already have an account ?" />

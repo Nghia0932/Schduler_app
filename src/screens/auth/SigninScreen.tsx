@@ -14,6 +14,7 @@ import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SocialSignin from './components/SocialSignin';
+import {fontFamilies} from '../../constants/fontFamilies';
 
 const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -76,7 +77,14 @@ const SigninScreen = ({navigation}: any) => {
           }}>
           <Image
             source={require('../../assets/images/logo1.png')}
-            style={{width: 250, height: 150, marginBottom: 10}}
+            style={{width: 150, height: 100, marginBottom: 10}}
+          />
+          <TextComponent
+            text="Scheduler.Hub"
+            title
+            styles={{color: appColors.primary}}
+            font={fontFamilies.bold}
+            size={28}
           />
         </SectionComponent>
         <SectionComponent>

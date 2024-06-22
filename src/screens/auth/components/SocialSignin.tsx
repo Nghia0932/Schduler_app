@@ -1,4 +1,3 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import {
   ButtonComponent,
@@ -6,9 +5,8 @@ import {
   TextComponent,
 } from '../../../components';
 import {appColors} from '../../../constants/appColors';
-import {appInfo} from '../../../constants/appInfors';
 import {fontFamilies} from '../../../constants/fontFamilies';
-import {Google} from 'iconsax-react-native';
+import {Google, Meta} from '../../../assets/svg';
 
 const SocialSignin = () => {
   return (
@@ -19,16 +17,26 @@ const SocialSignin = () => {
           top: -12,
         }}
         text="OR"
-        color={appColors.gray3}
+        color={appColors.text}
         size={16}
-        fontFamily={fontFamilies.semiBold}
+        fontFamily={fontFamilies.medium}
       />
       <ButtonComponent
         type="primary"
         color={appColors.white}
         textColor={appColors.text}
         text="Sign in with Google"
-        icon={<Google size={24} color={appColors.primary} />}
+        icon={<Google />}
+        textFont={fontFamilies.regular}
+        iconFlex="left"
+      />
+      <ButtonComponent
+        type="primary"
+        color={appColors.white}
+        textColor={appColors.text}
+        text="Sign in with Facebook"
+        icon={<Meta />}
+        textFont={fontFamilies.regular}
         iconFlex="left"
       />
     </SectionComponent>

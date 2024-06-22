@@ -11,6 +11,7 @@ import TextComponent from './TextComponent';
 import {globalStyle} from '../styles/globalStyles';
 import {appColors} from '../constants/appColors';
 import RowComponent from './RowComponent';
+import {fontFamilies} from '../constants/fontFamilies';
 
 interface Props {
   icon?: ReactNode;
@@ -24,6 +25,7 @@ interface Props {
   iconFlex?: 'right' | 'left';
   disable?: boolean;
   width?: number;
+  textFont?: string;
 }
 
 const ButtonComponent = (props: Props) => {
@@ -39,6 +41,7 @@ const ButtonComponent = (props: Props) => {
     iconFlex,
     disable,
     width,
+    textFont,
   } = props;
   return type === 'primary' ? (
     <View style={{alignItems: 'center'}}>
@@ -68,10 +71,11 @@ const ButtonComponent = (props: Props) => {
             {
               marginLeft: icon ? 12 : 0,
               textAlign: 'center',
+              fontSize: 16,
             },
           ]}
           flex={icon && iconFlex === 'right' ? 1 : 0}
-          size={16}
+          font={textFont ?? fontFamilies.medium}
         />
         {icon && iconFlex === 'right' && icon}
       </TouchableOpacity>
