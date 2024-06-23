@@ -15,6 +15,8 @@ import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SocialSignin from './components/SocialSignin';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {Validate} from '../../utils/validate';
+import authenticationAPI from '../../apis/authApi';
 
 const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -23,48 +25,23 @@ const SigninScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDisable, setIsDisable] = useState(true);
 
-  //useEffect(() => {
-  //  const emailValidation = Validate.email(email);
-  //  if (!email || !password || !emailValidation) {
-  //    setIsDisable(true);
-  //  } else {
-  //    setIsDisable(false);
-  //  }
-  //});
+  useEffect(() => {
+    const emailValidation = Validate.email(email);
+    if (!email || !password || !emailValidation) {
+      setIsDisable(true);
+    } else {
+      setIsDisable(false);
+    }
+  });
 
-  //const handleSignin = async () => {
-  //  if (!(email && password)) {
-  //    Alert.alert('Please enter complete information!');
-  //    return;
-  //  }
-  //  if (!emailValidation) {
-  //    Alert.alert('Email invalidate!');
-  //    return;
-  //  }
-  //  setIsLoading(true);
-  //  try {
-  //    setIsLoading(true);
-  //    const res = await authenticationAPI.HandleAuthentication(
-  //      '/login',
-  //      {email, password},
-  //      'post',
-  //    );
-
-  //    dispatch(addAuth(res.data));
-
-  //    await AsyncStorage.setItem(
-  //      'auth',
-  //      isRemember ? JSON.stringify(res.data) : email,
-  //    );
-
-  //    Alert.alert('', 'Logged in successfully');
-  //    setIsLoading(false);
-  //  } catch (error) {
-  //    console.log(error);
-  //    Alert.alert('', 'Email or Password is not correct');
-  //    setIsLoading(false);
-  //  }
-  //};
+  const handleSignin = async () => {
+    try {
+      const res = await authenticationAPI.HandleAuthentication('/hello');
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -132,7 +109,7 @@ const SigninScreen = ({navigation}: any) => {
             text="SIGN IN"
             type="primary"
             textStyles={{fontWeight: 'bold'}}
-            onPress={() => ''}
+            onPress={handleSignin}
           />
         </SectionComponent>
         <SocialSignin />
