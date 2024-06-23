@@ -3,10 +3,15 @@ import React, {useEffect, useState} from 'react';
 import {SplashScreen} from './src/screens';
 import {StatusBar} from 'react-native';
 import AuthNavigator from './src/navigators/AuthNavigator';
+import {useAsyncStorage} from '@react-native-async-storage/async-storage';
+import {Provider} from 'react-redux';
+import store from './src/redux/store';
+import AppRouters from './src/navigators/AppRouters';
 
 const App = () => {
   const [isShowSplash, setIsShowSplash] = useState(true);
-
+  const [accessToken, setAccessToken] = useState('');
+  const {getItem, setItem} = useAsyncStorage('accessToken');
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
@@ -16,23 +21,22 @@ const App = () => {
 
   return (
     <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
-      {isShowSplash ? (
-        <SplashScreen />
-      ) : (
-        <NavigationContainer>
-          <AuthNavigator />
-        </NavigationContainer>
-      )}
+      <Provider store={store}>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="transparent"
+          translucent
+        />
+        {isShowSplash ? (
+          <SplashScreen />
+        ) : (
+          <NavigationContainer>
+            <AppRouters />
+          </NavigationContainer>
+        )}
+      </Provider>
     </>
   );
 };
 
 export default App;
-//nghiatran00932
-//6496T6GrtLWN6poA
-//mongodb+srv://nghiatran00932:6496T6GrtLWN6poA@cluster0.kqgnc0x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

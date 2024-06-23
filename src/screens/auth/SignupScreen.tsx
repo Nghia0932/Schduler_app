@@ -15,6 +15,9 @@ import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Validate} from '../../utils/validate';
 import SocialSignin from './components/SocialSignin';
+import authenticationAPI from '../../apis/authApi';
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducer';
 
 interface ErrorMessage {
   userName: string;
@@ -34,7 +37,7 @@ const SignupScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<any>();
   const [isDisable, setIsDisable] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (
       !errorMessage ||
@@ -94,7 +97,7 @@ const SignupScreen = ({navigation}: any) => {
         if (!values.password) {
           message = 'Please confirm password';
         } else if (values.confirmPassword != values.password) {
-          message = 'Xác nhận password chưa khớp!!';
+          message = 'Confirm password does not match!!';
         } else {
           message = '';
         }
@@ -105,29 +108,29 @@ const SignupScreen = ({navigation}: any) => {
     setErrorMessage(data);
   };
 
-  //  const handleRegister = async () => {
-  //    setIsLoading(true);
-  //    const api = `/verification`;
+  const handleSignup = async () => {
+    setIsLoading(true);
+    const api = `/signup`;
 
-  //    try {
-  //      const res = await authenticationAPI.HandleAuthentication(
-  //        api,
-  //        {email: values.email},
-  //        'post',
-  //      );
-  //      navigation.navigate('VerificationScreen', {
-  //        code: res.data.code,
-  //        ...values,
-  //        resetPassword: 0,
-  //      });
+    try {
+      const res = await authenticationAPI.HandleAuthentication(
+        api,
+        {
+          fullname: values.userName,
+          email: values.email,
+          password: values.password,
+        },
+        'post',
+      );
 
-  //      console.log(res);
-  //      setIsLoading(false);
-  //    } catch (error) {
-  //      console.log(error);
-  //      setIsLoading(false);
-  //    }
-  //  };
+      dispatch(addAuth(res.data));
+      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -202,7 +205,7 @@ const SignupScreen = ({navigation}: any) => {
             text="SIGN UP"
             type="primary"
             textStyles={{fontWeight: 'bold'}}
-            onPress={() => {}}
+            onPress={handleSignup}
           />
         </SectionComponent>
         <SocialSignin />
