@@ -9,7 +9,7 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../components';
-import {Lock, Sms, User} from 'iconsax-react-native';
+import {ArrowRight, Lock, Sms, User} from 'iconsax-react-native';
 import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,6 +18,7 @@ import SocialSignin from './components/SocialSignin';
 import authenticationAPI from '../../apis/authApi';
 import {useDispatch} from 'react-redux';
 import {addAuth} from '../../redux/reducers/authReducer';
+import {globalStyle} from '../../styles/globalStyles';
 
 interface ErrorMessage {
   userName: string;
@@ -110,21 +111,21 @@ const SignupScreen = ({navigation}: any) => {
 
   const handleSignup = async () => {
     setIsLoading(true);
-    const api = `/signup`;
+    const api = `/verification`;
 
     try {
       const res = await authenticationAPI.HandleAuthentication(
         api,
-        {
-          fullname: values.userName,
-          email: values.email,
-          password: values.password,
-        },
+        {email: values.email},
         'post',
       );
+      navigation.navigate('VerificationScreen', {
+        code: res.data.code,
+        ...values,
+        resetPassword: 0,
+      });
 
-      dispatch(addAuth(res.data));
-      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+      console.log(res);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -206,6 +207,18 @@ const SignupScreen = ({navigation}: any) => {
             type="primary"
             textStyles={{fontWeight: 'bold'}}
             onPress={handleSignup}
+            icon={
+              <View
+                style={[
+                  globalStyle.iconContainer,
+                  {
+                    backgroundColor: isDisable ? '#525357' : '#3d56f0',
+                  },
+                ]}>
+                <ArrowRight size={20} color={appColors.white} />
+              </View>
+            }
+            iconFlex="right"
           />
         </SectionComponent>
         <SocialSignin />

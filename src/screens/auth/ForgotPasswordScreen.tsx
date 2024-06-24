@@ -13,6 +13,7 @@ import {ArrowLeft, ArrowRight, Sms, Code} from 'iconsax-react-native';
 import {appColors} from '../../constants/appColors';
 import {Validate} from '../../utils/validate';
 import {LoadingModal} from '../../modals';
+import authenticationAPI from '../../apis/authApi';
 
 const initValue = {
   userName: '',
@@ -35,25 +36,25 @@ const ForgotPasswordScreen = ({navigation}: any) => {
     setIsLoading(true);
     const api = `/verification`;
 
-    //try {
-    //  const res = await authenticationAPI.HandleAuthentication(
-    //    api,
-    //    {email},
-    //    'post',
-    //  );
-    //  navigation.navigate('VerificationScreen', {
-    //    code: res.data.code,
-    //    email: email,
-    //    ...values,
-    //    resetPassword: 1,
-    //  });
+    try {
+      const res = await authenticationAPI.HandleAuthentication(
+        api,
+        {email},
+        'post',
+      );
+      navigation.navigate('VerificationScreen', {
+        code: res.data.code,
+        email: email,
+        ...values,
+        resetPassword: 1,
+      });
 
-    //  console.log(res);
-    //  setIsLoading(false);
-    //} catch (error) {
-    //  console.log(error);
-    //  setIsLoading(false);
-    //}
+      console.log(res);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   return (

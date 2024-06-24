@@ -4,6 +4,7 @@ import OnboardingScreen from './auth/OnboardingScreen';
 import SignupScreen from './auth/SignupScreen';
 import HomeScreen from './home/HomeScreen';
 import ForgotPasswordScreen from './auth/ForgotPasswordScreen';
+import VerificationScreen from './auth/VerificationScreen';
 
 export {
   HomeScreen,
@@ -12,4 +13,5 @@ export {
   OnboardingScreen,
   SignupScreen,
   ForgotPasswordScreen,
+  VerificationScreen,
 };

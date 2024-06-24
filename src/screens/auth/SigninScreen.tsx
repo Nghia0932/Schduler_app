@@ -9,7 +9,7 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../components';
-import {Lock, Sms} from 'iconsax-react-native';
+import {ArrowRight, Lock, Sms} from 'iconsax-react-native';
 import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +19,7 @@ import {Validate} from '../../utils/validate';
 import authenticationAPI from '../../apis/authApi';
 import {useDispatch} from 'react-redux';
 import {addAuth} from '../../redux/reducers/authReducer';
+import {globalStyle} from '../../styles/globalStyles';
 
 const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -123,6 +124,7 @@ const SigninScreen = ({navigation}: any) => {
                 value={isRemember}
                 onChange={() => setIsRemember(!isRemember)}
               />
+              <SpaceComponent width={4} />
               <TextComponent text="Remember Me" color={appColors.text} />
             </RowComponent>
             <ButtonComponent
@@ -139,6 +141,18 @@ const SigninScreen = ({navigation}: any) => {
             type="primary"
             textStyles={{fontWeight: 'bold'}}
             onPress={handleSignin}
+            icon={
+              <View
+                style={[
+                  globalStyle.iconContainer,
+                  {
+                    backgroundColor: isDisable ? '#525357' : '#3d56f0',
+                  },
+                ]}>
+                <ArrowRight size={20} color={appColors.white} />
+              </View>
+            }
+            iconFlex="right"
           />
         </SectionComponent>
         <SocialSignin />

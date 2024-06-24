@@ -1,6 +1,10 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
-import {ForgotPasswordScreen, SigninScreen} from '../screens';
+import {
+  ForgotPasswordScreen,
+  SigninScreen,
+  VerificationScreen,
+} from '../screens';
 import OnboardingScreen from '../screens/auth/OnboardingScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +34,7 @@ const AuthNavigator = () => {
         name="ForgotPasswordScreen"
         component={ForgotPasswordScreen}
       />
+      <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
     </Stack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import {View, Text, StyleProp, TextStyle} from 'react-native';
+import {View, Text, StyleProp, TextStyle, Platform} from 'react-native';
 import React from 'react';
 import {appColors} from '../constants/appColors';
 import {globalStyle} from '../styles/globalStyles';
@@ -18,6 +18,7 @@ interface Props {
 const TextComponent = (props: Props) => {
   const {text, size, flex, font, color, styles, title} = props;
 
+  const fontDesignDefault = Platform.OS === 'ios' ? 16 : 14;
   return (
     <Text
       style={[
