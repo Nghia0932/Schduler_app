@@ -1,16 +1,29 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
-import {ForgotPasswordScreen, SigninScreen, SignupScreen} from '../screens';
+import React, {useEffect, useState} from 'react';
+import {ForgotPasswordScreen, SigninScreen} from '../screens';
 import OnboardingScreen from '../screens/auth/OnboardingScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const AuthNavigator = () => {
+const AuthNavigator = () => {
   const Stack = createNativeStackNavigator();
+  const [isExistingUser, setIsExistingUser] = useState(false);
+
+  useEffect(() => {
+    checkUserExisting();
+  }, []);
+  const checkUserExisting = async () => {
+    const res = await AsyncStorage.getItem('auth');
+
+    res && setIsExistingUser(true);
+  };
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      {!isExistingUser && (
+        <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
+      )}
+
       <Stack.Screen name="SigninScreen" component={SigninScreen} />
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
       <Stack.Screen
@@ -20,4 +33,5 @@ export const AuthNavigator = () => {
     </Stack.Navigator>
   );
 };
+
 export default AuthNavigator;

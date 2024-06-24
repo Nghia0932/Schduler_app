@@ -17,6 +17,8 @@ import SocialSignin from './components/SocialSignin';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {Validate} from '../../utils/validate';
 import authenticationAPI from '../../apis/authApi';
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducer';
 
 const SigninScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -24,7 +26,9 @@ const SigninScreen = ({navigation}: any) => {
   const [isRemember, setIsRemember] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDisable, setIsDisable] = useState(true);
+  const dispatch = useDispatch();
 
+  const emailValidation = Validate.email(email);
   useEffect(() => {
     const emailValidation = Validate.email(email);
     if (!email || !password || !emailValidation) {
@@ -35,11 +39,36 @@ const SigninScreen = ({navigation}: any) => {
   });
 
   const handleSignin = async () => {
+    if (!(email && password)) {
+      Alert.alert('Please enter complete information!');
+      return;
+    }
+    if (!emailValidation) {
+      Alert.alert('Email invalidate!');
+      return;
+    }
+    setIsLoading(true);
     try {
-      const res = await authenticationAPI.HandleAuthentication('/hello');
-      console.log(res);
+      setIsLoading(true);
+      const res = await authenticationAPI.HandleAuthentication(
+        '/signin',
+        {email, password},
+        'post',
+      );
+
+      dispatch(addAuth(res.data));
+
+      await AsyncStorage.setItem(
+        'auth',
+        isRemember ? JSON.stringify(res.data) : email,
+      );
+
+      Alert.alert('', 'Signed in successfully');
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      Alert.alert('', 'Email or password is incorrect');
+      setIsLoading(false);
     }
   };
 
