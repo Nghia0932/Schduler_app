@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "866168640176",
+    "project_id": "schedulerhub-427513",
+    "storage_bucket": "schedulerhub-427513.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866168640176:android:e49e143b36e3bdad47a175",
+        "android_client_info": {
+          "package_name": "com.schduler_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866168640176-innvsn0tbpq4mmppt65hts8i7mu59301.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.schduler_app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "866168640176-gaf2bnk1sje9pop1msokp3p4ipics3c2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsSILF9PCy-SuAlTJnpDTJc9IwLSOqxOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866168640176-27ftpf0h20heu7sc32msoa1d2aeu57lf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

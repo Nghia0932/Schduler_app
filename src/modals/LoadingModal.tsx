@@ -18,12 +18,12 @@ const LoadingModal = (props: Props) => {
     if (visibale && !intervalId) {
       const id = setInterval(
         () => {
-          setPercentage((prevPercentage) => {
-            const nextPercentage = prevPercentage + 10;
+          setPercentage(prevPercentage => {
+            const nextPercentage = prevPercentage + 1;
             return nextPercentage > 100 ? 0 : nextPercentage;
           });
         },
-        time ? time : 1000
+        time ? time : 1000,
       ); // Thay đổi giá trị này để điều chỉnh tốc độ tăng
       setIntervalId(id);
     } else if (!visibale && intervalId) {

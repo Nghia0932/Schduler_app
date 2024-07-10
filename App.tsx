@@ -8,6 +8,13 @@ import {Provider} from 'react-redux';
 import store from './src/redux/store';
 import AppRouters from './src/navigators/AppRouters';
 
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId:
+    '866168640176-4l9gdt2isdrqnidtt2ovthljf4rc2dm7.apps.googleusercontent.com',
+});
+
 const App = () => {
   const [isShowSplash, setIsShowSplash] = useState(true);
   const [accessToken, setAccessToken] = useState('');

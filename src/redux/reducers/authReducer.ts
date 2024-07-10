@@ -4,7 +4,7 @@ interface AuthState {
   id: string;
   email: string;
   accesstoken: string;
-  fullname: string;
+  name: string;
   photoUrl: string;
 }
 
@@ -12,16 +12,20 @@ const initialState: {
   id: string;
   email: string;
   accesstoken: string;
-  fullname: string;
+  name: string;
   photoBackGroundUrl: string;
-  photoAvatarUrl: string;
+  photo: string;
+  familyName: string;
+  givenName: string;
 } = {
   id: '',
   email: '',
   accesstoken: '',
-  fullname: '',
+  name: '',
   photoBackGroundUrl: '',
-  photoAvatarUrl: '',
+  photo: '',
+  familyName: '',
+  givenName: '',
 };
 
 const authSlice = createSlice({
@@ -35,25 +39,29 @@ const authSlice = createSlice({
         id,
         email,
         accesstoken,
-        fullname,
+        name,
         photoBackGroundUrl,
-        photoAvatarUrl,
+        photo,
+        familyName,
+        givenName,
       } = action.payload;
       state.authData = {
         id,
         email,
         accesstoken,
-        fullname,
+        name,
         photoBackGroundUrl,
-        photoAvatarUrl,
+        photo,
+        familyName,
+        givenName,
       };
     },
 
     removeAuth: (state, action) => {
       state.authData = initialState;
     },
-    updatePhotoAvatarUrl: (state, action) => {
-      state.authData.photoAvatarUrl = action.payload;
+    updatephoto: (state, action) => {
+      state.authData.photo = action.payload;
     },
     updatePhotoBackgroundUrl: (state, action) => {
       state.authData.photoBackGroundUrl = action.payload;
@@ -62,11 +70,7 @@ const authSlice = createSlice({
 });
 
 export const authReducer = authSlice.reducer;
-export const {
-  addAuth,
-  removeAuth,
-  updatePhotoAvatarUrl,
-  updatePhotoBackgroundUrl,
-} = authSlice.actions;
+export const {addAuth, removeAuth, updatephoto, updatePhotoBackgroundUrl} =
+  authSlice.actions;
 
 export const authSelector = (state: any) => state.authReducer.authData;

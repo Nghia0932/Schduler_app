@@ -158,7 +158,7 @@ const VerificationScreen = ({navigation, route}: any) => {
             setIsLoading(false);
             Alert.alert('Signed up successfully');
 
-            dispatch(addAuth(res.data));
+            //dispatch(addAuth(res.data));
             navigation.navigate('SigninScreen');
             await AsyncStorage.setItem('auth', JSON.stringify(res.data));
           } catch (error) {
