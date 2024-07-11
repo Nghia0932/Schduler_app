@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Schduler_app</string>
+    <string name="app_name">sheduler_app</string>
+    <string name="facebook_app_id">453809940836054</string><string name="facebook_client_token">418dab7b30b60c5232d21dd470c28cdb</string>
 </resources>

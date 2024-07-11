@@ -13,6 +13,7 @@ import authenticationAPI from '../../../apis/authApi';
 import {useDispatch} from 'react-redux';
 import {addAuth} from '../../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Settings} from 'react-native-fbsdk-next';
 
 GoogleSignin.configure({
   webClientId:
@@ -84,7 +85,7 @@ const SocialSignin = () => {
         textFont={fontFamilies.regular}
         iconFlex="left"
       />
-      <ButtonComponent
+      {/*<ButtonComponent
         onPress={handleSignOutWithGoogle}
         type="primary"
         color={appColors.white}
@@ -93,7 +94,7 @@ const SocialSignin = () => {
         icon={<Meta />}
         textFont={fontFamilies.regular}
         iconFlex="left"
-      />
+      />*/}
     </SectionComponent>
   );
 };

@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 class MainApplication : Application(), ReactApplication {
 
@@ -39,5 +40,12 @@ class MainApplication : Application(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
+  }
+  @Override
+  protected List<ReactPackage> getPackages() {
+      return Arrays.asList(
+              new MainReactPackage(),
+              new FBSDKPackage()
+      );
   }
 }

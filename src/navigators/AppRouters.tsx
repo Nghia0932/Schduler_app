@@ -1,11 +1,10 @@
-import {View, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import MainNavigator from './MainNavigator';
-import AuthNavigator from './AuthNavigator';
 import {useAsyncStorage} from '@react-native-async-storage/async-storage';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {addAuth, authSelector} from '../redux/reducers/authReducer';
 import {SplashScreen} from '../screens';
+import AuthNavigator from './AuthNavigator';
+import MainNavigator from './MainNavigator';
 
 const AppRouters = () => {
   const [isShowSplash, setIsShowSplash] = useState(true);
