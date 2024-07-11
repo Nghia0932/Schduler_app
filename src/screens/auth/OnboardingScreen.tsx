@@ -33,7 +33,7 @@ const OnboardingScreen = ({navigation}: any) => {
       </Swiper>
       <View style={styles.view}>
         <TouchableOpacity onPress={() => navigation.navigate('SigninScreen')}>
-          <TextComponent text="Skip" color={appColors.white} />
+          <TextComponent text="Skip" color={appColors.white} size={18} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -41,7 +41,7 @@ const OnboardingScreen = ({navigation}: any) => {
               ? setIndex(index + 1)
               : navigation.navigate('SigninScreen')
           }>
-          <TextComponent text="Next" color={appColors.white} />
+          <TextComponent text="Next" color={appColors.white} size={16} />
         </TouchableOpacity>
       </View>
     </View>

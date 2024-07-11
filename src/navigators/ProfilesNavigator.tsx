@@ -5,7 +5,10 @@ import {ProfilesScreen} from '../screens';
 const ProfilesNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen name="ProfilesScreen" component={ProfilesScreen} />
     </Stack.Navigator>
   );

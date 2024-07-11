@@ -1,17 +1,20 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {MapsScreen} from '../screens';
+import {NotificationsScreen} from '../screens';
 
-const MapsNavigator = () => {
+const NotificationNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="MapsScreen" component={MapsScreen} />
+      <Stack.Screen
+        name="NotificationsScreen"
+        component={NotificationsScreen}
+      />
     </Stack.Navigator>
   );
 };
 
-export default MapsNavigator;
+export default NotificationNavigator;

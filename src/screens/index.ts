@@ -6,8 +6,8 @@ import HomeScreen from './home/HomeScreen';
 import ForgotPasswordScreen from './auth/ForgotPasswordScreen';
 import VerificationScreen from './auth/VerificationScreen';
 import AddNewScreen from './home/AddNewScreen';
-import EventsScreen from './events/EventsScreen';
-import MapsScreen from './maps/MapsScreen';
+import CalendarsScreen from './calendars/CalendarsScreen';
+import NotificationsScreen from './nootifications/NotificationsScreen';
 import ProfilesScreen from './profiles/ProfilesScreen';
 
 export {
@@ -19,7 +19,7 @@ export {
   ForgotPasswordScreen,
   VerificationScreen,
   AddNewScreen,
-  EventsScreen,
-  MapsScreen,
+  CalendarsScreen,
+  NotificationsScreen,
   ProfilesScreen,
 };

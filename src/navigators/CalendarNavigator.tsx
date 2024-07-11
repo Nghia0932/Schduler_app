@@ -1,18 +1,17 @@
-import {View, Text} from 'react-native';
-import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HomeScreen} from '../screens';
+import React from 'react';
+import {CalendarsScreen} from '../screens';
 
-const ExplorerNavigator = () => {
+const CalendarNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="CalendarsScreen" component={CalendarsScreen} />
     </Stack.Navigator>
   );
 };
 
-export default ExplorerNavigator;
+export default CalendarNavigator;

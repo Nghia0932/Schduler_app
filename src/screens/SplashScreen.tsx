@@ -1,8 +1,9 @@
 import React from 'react';
 import {ActivityIndicator, Image, ImageBackground} from 'react-native';
-import {SpaceComponent} from '../components';
+import {SpaceComponent, TextComponent} from '../components';
 import {appInfo} from '../constants/appInfors';
 import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
 const SplashScreen = () => {
   return (
     <ImageBackground
@@ -22,6 +23,12 @@ const SplashScreen = () => {
         }}
       />
       <SpaceComponent height={16} />
+      <TextComponent
+        text="Calendar.Hub"
+        size={32}
+        color={appColors.primary}
+        font={fontFamilies.bold}
+      />
       <ActivityIndicator color={appColors.primary} size={36} />
     </ImageBackground>
   );
