@@ -1,7 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useState} from 'react';
 
 import {
+  AddSquare,
   Calendar,
   CalendarTick,
   Profile,
@@ -18,9 +19,13 @@ import ProfilesNavigator from './ProfilesNavigator';
 
 import {TextComponent} from '../components';
 import CalendarNavigator from './CalendarNavigator';
+import {View} from 'react-native';
+import {globalStyle} from '../styles/globalStyles';
+import DrawerNavigator from './DrawerNavigator';
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
+  const [isTabBarVisible, setIsTabBarVisible] = useState(true);
 
   return (
     <Tab.Navigator
@@ -31,6 +36,9 @@ const TabNavigator = () => {
           justifyContent: 'center',
           alignItems: 'center',
         },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: appColors.gray,
+
         tabBarIcon: ({focused, color, size}) => {
           let icon: ReactNode;
           color = focused ? appColors.primary : appColors.gray;
@@ -51,7 +59,24 @@ const TabNavigator = () => {
               );
               break;
             case 'Add':
-              icon = <MaterialIcons name="add" size={size} color={color} />;
+              icon = (
+                <View
+                  style={[
+                    globalStyle.shadow,
+                    {
+                      width: 46,
+                      height: 46,
+                      backgroundColor: appColors.primary,
+                      borderRadius: 100,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: -40,
+                      zIndex: -1,
+                    },
+                  ]}>
+                  <AddSquare size={20} color={appColors.white} variant="Bold" />
+                </View>
+              );
               break;
             case 'Notifications':
               icon = !focused ? (
@@ -100,11 +125,10 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Add"
         component={AddNewScreen}
-        options={
-          {
-            //tabBarShowLabel: false,
-          }
-        }
+        options={{
+          //tabBarShowLabel: false,
+          tabBarLabel: '',
+        }}
       />
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
       <Tab.Screen name="Profiles" component={ProfilesNavigator} />

@@ -6,4 +6,5 @@ export const appColors = {
   gray2: '#DADADA',
   gray3: '#E4DFDF',
   danger: '#c0392b',
+  gray4: '#f5f1f1',
 };

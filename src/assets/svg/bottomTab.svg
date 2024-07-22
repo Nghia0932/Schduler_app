@@ -1,0 +1,5 @@
+<svg stroke="transparent"
+    fill="white"
+    strokeWidth={0}>
+<Path d="M 62.8 O Q 82.8 0 102.8 20 C 122.8 40 142.8 40 162.8 20 Q 182.8 0 202.8 0"/>
+</svg>
