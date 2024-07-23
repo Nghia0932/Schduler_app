@@ -22,7 +22,10 @@ import {
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {globalStyle} from '../../styles/globalStyles';
 import {
+  AvatarGroupComponent,
   CardComponent,
+  CardimageComponent,
+  CicularComponent,
   CircleComponent,
   InputComponent,
   RowComponent,
@@ -32,9 +35,11 @@ import {
   TextComponent,
 } from '../../components';
 import {
+  Edit2,
   HambergerMenu,
   Notification,
   SearchNormal1,
+  Size,
   User,
   UserCirlceAdd,
   UserSquare,
@@ -175,6 +180,7 @@ const HomeScreen = ({navigation}: any) => {
               style={[localStyles.input, globalStyle.text, {minHeight: 56}]}
               value={Search}
               placeholder="Search..."
+              placeholderTextColor={appColors.white}
               cursorColor={appColors.white}
             />
           </RowComponent>
@@ -200,10 +206,63 @@ const HomeScreen = ({navigation}: any) => {
                 </RowComponent>
               </View>
               <View>
-                <TextComponent text="Circle Char" />
+                <CicularComponent value={10} />
               </View>
             </RowComponent>
           </CardComponent>
+        </SectionComponent>
+        <SectionComponent>
+          <RowComponent styles={{alignItems: 'flex-start'}}>
+            <View style={{flex: 1}}>
+              <CardimageComponent>
+                <TouchableOpacity style={[globalStyle.iconCard]}>
+                  <Edit2 size={20} color={appColors.white} />
+                </TouchableOpacity>
+                <TextComponent
+                  text="UX Design"
+                  title
+                  styles={{
+                    fontFamily: fontFamilies.semiBold,
+                    fontSize: 22,
+                  }}
+                />
+                <TextComponent text="Task Managements mobile app" size={16} />
+                <View style={{marginVertical: 24}}>
+                  <AvatarGroupComponent />
+                </View>
+                <TagComponent
+                  text="2024 March 03"
+                  tagStyles={{marginHorizontal: -5}}
+                />
+              </CardimageComponent>
+            </View>
+            <SpaceComponent width={16} />
+            <View style={{flex: 1}}>
+              <CardimageComponent color="rgba(215, 255, 145, 0.9)">
+                <TouchableOpacity style={[globalStyle.iconCard]}>
+                  <Edit2 size={20} color={appColors.white} />
+                </TouchableOpacity>
+                <TextComponent
+                  text="API Payment"
+                  title
+                  styles={{fontFamily: fontFamilies.semiBold, fontSize: 22}}
+                />
+                <AvatarGroupComponent />
+              </CardimageComponent>
+              <SpaceComponent height={16} />
+              <CardimageComponent color="rgba(164, 247, 255, 0.9)">
+                <TouchableOpacity style={[globalStyle.iconCard]}>
+                  <Edit2 size={20} color={appColors.white} />
+                </TouchableOpacity>
+                <TextComponent
+                  text="Update work"
+                  title
+                  styles={{fontFamily: fontFamilies.semiBold, fontSize: 22}}
+                />
+                <TextComponent text="Revision home page" size={16} />
+              </CardimageComponent>
+            </View>
+          </RowComponent>
         </SectionComponent>
       </View>
     </View>

@@ -49,7 +49,7 @@ export const globalStyle = StyleSheet.create({
     borderRadius: 20,
   },
   inputContainer: {
-    backgroundColor: appColors.primary2,
+    backgroundColor: appColors.green,
     borderRadius: 12,
     paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
     paddingVertical: Platform.OS === 'ios' ? 12 : 10,
@@ -59,5 +59,17 @@ export const globalStyle = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 100,
     backgroundColor: appColors.primary,
+  },
+  card: {
+    borderRadius: 12,
+  },
+  iconCard: {
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    width: 32,
+    height: 32,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
   },
 });

@@ -9,6 +9,10 @@ import CircleComponent from './CircleComponent';
 import DrawerCustomComponent from './DrawerCustomComponent';
 import CardComponent from './CardComponent';
 import TagComponent from './TagComponent';
+import CicularComponent from './CicularComponent';
+import CardimageComponent from './CardimageComponent';
+import AvatarGroupComponent from './AvatarGroupComponent';
+import ProgressBarComponent from './ProgressBarComponent';
 
 export {
   SpaceComponent,
@@ -22,4 +26,8 @@ export {
   DrawerCustomComponent,
   CardComponent,
   TagComponent,
+  CicularComponent,
+  CardimageComponent,
+  AvatarGroupComponent,
+  ProgressBarComponent,
 };

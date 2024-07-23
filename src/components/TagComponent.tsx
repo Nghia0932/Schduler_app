@@ -21,9 +21,9 @@ const TagComponent = (props: Props) => {
       style={[
         globalStyle.tag,
         tagStyles,
-        {backgroundColor: color ?? appColors.primary},
+        {backgroundColor: color ?? appColors.primary2},
       ]}>
-      <TextComponent text={text} styles={textStyles} />
+      <TextComponent text={text} styles={[textStyles]} />
     </TouchableOpacity>
   );
 };
