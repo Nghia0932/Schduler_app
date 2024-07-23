@@ -7,6 +7,8 @@ import InputComponent from './InputComponent';
 import ContainerComponent from './ContainerComponent';
 import CircleComponent from './CircleComponent';
 import DrawerCustomComponent from './DrawerCustomComponent';
+import CardComponent from './CardComponent';
+import TagComponent from './TagComponent';
 
 export {
   SpaceComponent,
@@ -18,4 +20,6 @@ export {
   ContainerComponent,
   CircleComponent,
   DrawerCustomComponent,
+  CardComponent,
+  TagComponent,
 };

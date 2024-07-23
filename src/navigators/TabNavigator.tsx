@@ -70,8 +70,6 @@ const TabNavigator = () => {
                       borderRadius: 100,
                       alignItems: 'center',
                       justifyContent: 'center',
-                      marginTop: -40,
-                      zIndex: -1,
                     },
                   ]}>
                   <AddSquare size={20} color={appColors.white} variant="Bold" />
@@ -120,7 +118,13 @@ const TabNavigator = () => {
           );
         },
       })}>
-      <Tab.Screen name="Home" component={HomeNavigator} />
+      <Tab.Screen
+        name="Home"
+        component={HomeNavigator}
+        options={{
+          tabBarHideOnKeyboard: true,
+        }}
+      />
       <Tab.Screen name="Calendar" component={CalendarNavigator} />
       <Tab.Screen
         name="Add"

@@ -87,7 +87,7 @@ const SigninScreen = ({navigation}: any) => {
             style={{width: 150, height: 100, marginBottom: 10}}
           />
           <TextComponent
-            text="Calendar.Hub"
+            text="Schedule.Hub"
             title
             styles={{color: appColors.primary}}
             font={fontFamilies.bold}

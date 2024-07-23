@@ -24,7 +24,7 @@ const SplashScreen = () => {
       />
       <SpaceComponent height={16} />
       <TextComponent
-        text="Calendar.Hub"
+        text="Schedule.Hub"
         size={32}
         color={appColors.primary}
         font={fontFamilies.bold}

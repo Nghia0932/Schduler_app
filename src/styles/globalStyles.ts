@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
 export const globalStyle = StyleSheet.create({
@@ -47,5 +47,17 @@ export const globalStyle = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 20,
+  },
+  inputContainer: {
+    backgroundColor: appColors.primary2,
+    borderRadius: 12,
+    paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 10,
+  },
+  tag: {
+    paddingHorizontal: 20,
+    paddingVertical: 6,
+    borderRadius: 100,
+    backgroundColor: appColors.primary,
   },
 });
