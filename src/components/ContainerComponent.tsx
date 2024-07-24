@@ -5,7 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {ReactNode} from 'react';
+import React, {forwardRef, ReactNode} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {globalStyle} from '../styles/globalStyles';
 import {useNavigation} from '@react-navigation/native';
@@ -21,10 +21,22 @@ interface Props {
   title?: string;
   children: ReactNode;
   back?: boolean;
+  onScroll?: (e: any) => void;
+  onScrollEndDrag?: () => void;
+  ref?: React.RefObject<ScrollView>;
 }
 
 const ContainerComponent = (props: Props) => {
-  const {children, isImageBackground, isScroll, title, back} = props;
+  const {
+    children,
+    isImageBackground,
+    isScroll,
+    title,
+    back,
+    onScroll,
+    onScrollEndDrag,
+    ref,
+  } = props;
 
   const navigation: any = useNavigation();
   const headerComponent = () => {
@@ -64,7 +76,14 @@ const ContainerComponent = (props: Props) => {
   };
 
   const returnContainer = isScroll ? (
-    <ScrollView showsVerticalScrollIndicator={false}>{children}</ScrollView>
+    <ScrollView
+      ref={ref}
+      showsVerticalScrollIndicator={false}
+      onScroll={onScroll}
+      onScrollEndDrag={onScrollEndDrag}
+      scrollEventThrottle={16}>
+      {children}
+    </ScrollView>
   ) : (
     <View>{children}</View>
   );
@@ -76,9 +95,9 @@ const ContainerComponent = (props: Props) => {
       <SafeAreaView style={{flex: 1}}>{headerComponent()}</SafeAreaView>
     </ImageBackground>
   ) : (
-    <SafeAreaView style={globalStyle.container}>
+    <View style={globalStyle.container}>
       <View>{headerComponent()}</View>
-    </SafeAreaView>
+    </View>
   );
 };
 

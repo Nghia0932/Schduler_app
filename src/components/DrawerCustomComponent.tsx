@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   ImageBackground,
+  SafeAreaView,
 } from 'react-native';
 import React from 'react';
 import RowComponent from './RowComponent';
@@ -165,6 +166,13 @@ const DrawerCustom = ({navigation}: any) => {
               onPress={
                 item.key === 'SignOut'
                   ? () => handleSignOut()
+                  : item.key === 'Calendar'
+                  ? () => {
+                      navigation.navigate('Calendar', {
+                        screen: 'CalendarsScreen',
+                      });
+                      navigation.closeDrawer();
+                    }
                   : item.key === 'my-profile'
                   ? () => {
                       navigation.navigate('Profiles', {

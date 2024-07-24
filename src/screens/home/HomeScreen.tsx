@@ -1,51 +1,41 @@
 import {
-  View,
-  Text,
-  Button,
-  StatusBar,
-  SafeAreaView,
-  TouchableOpacity,
-  Platform,
+  Edit2,
+  HambergerMenu,
+  Notification,
+  SearchNormal1,
+} from 'iconsax-react-native';
+import React, {useRef, useState} from 'react';
+import {
+  Animated,
   Image,
+  Platform,
+  StatusBar,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {appColors} from '../../constants/appColors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  authReducer,
-  authSelector,
-  removeAuth,
-} from '../../redux/reducers/authReducer';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {globalStyle} from '../../styles/globalStyles';
 import {
   AvatarGroupComponent,
   CardComponent,
   CardimageComponent,
   CicularComponent,
   CircleComponent,
-  InputComponent,
+  ContainerComponent,
+  ProgressBarComponent,
   RowComponent,
   SectionComponent,
   SpaceComponent,
   TagComponent,
   TextComponent,
 } from '../../components';
-import {
-  Edit2,
-  HambergerMenu,
-  Notification,
-  SearchNormal1,
-  Size,
-  User,
-  UserCirlceAdd,
-  UserSquare,
-} from 'iconsax-react-native';
-import {appInfo} from '../../constants/appInfors';
+import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {authSelector} from '../../redux/reducers/authReducer';
+import {globalStyle} from '../../styles/globalStyles';
+import {ScrollView} from 'react-native';
 
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -61,23 +51,105 @@ const HomeScreen = ({navigation}: any) => {
     return initials.toUpperCase();
   }
 
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const scrollViewRef = useRef<ScrollView>(null);
+  const lastOffsetY = useRef(0);
+  const scrollDirection = useRef('');
+
+  const seacrchAnimation = {
+    transform: [
+      {
+        scaleX: animatedValue.interpolate({
+          inputRange: [0, 75],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        }),
+      },
+      {
+        translateX: animatedValue.interpolate({
+          inputRange: [0, 20],
+          outputRange: [0, 50],
+          extrapolate: 'clamp',
+        }),
+      },
+    ],
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 50],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+  };
+  const ViewTextAnimation = {
+    transform: [
+      {
+        scale: animatedValue.interpolate({
+          inputRange: [0, 30],
+          outputRange: [1, 0],
+          extrapolate: 'clamp',
+        }),
+      },
+    ],
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 30],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    }),
+  };
+  const ViewSeacrchAnimation = {
+    transform: [
+      {
+        translateX: animatedValue.interpolate({
+          inputRange: [0, 80],
+          outputRange: [0, 40],
+          extrapolate: 'clamp',
+        }),
+      },
+      {
+        translateY: animatedValue.interpolate({
+          inputRange: [0, 100],
+          outputRange: [0, -50],
+          extrapolate: 'clamp',
+        }),
+      },
+    ],
+  };
+  const headerHeight = animatedValue.interpolate({
+    inputRange: [0, 80], // Từ vị trí cuộn 0 đến 50
+    outputRange: [120, 70], // Chiều cao thay đổi từ 120 đến 50
+    extrapolate: 'clamp', // Giới hạn giá trị trong khoảng 0-50
+  });
+  const marginTopAnimation = animatedValue.interpolate({
+    inputRange: [0, 80],
+    outputRange: [15, 25],
+    extrapolate: 'clamp',
+  });
+
+  const TextInputAnimated = Animated.createAnimatedComponent(TextInput);
+  const ViewAnimated = Animated.createAnimatedComponent(View);
+
   return (
-    <View style={[globalStyle.container]}>
-      <StatusBar barStyle={'light-content'} />
-      <View
-        style={{
-          backgroundColor: appColors.primary,
-          height: 140,
-          borderBottomLeftRadius: 40,
-          borderBottomRightRadius: 40,
-          paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
-          paddingHorizontal: 16,
-        }}>
+    <SafeAreaView style={[globalStyle.container]}>
+      <ViewAnimated
+        style={[
+          {
+            backgroundColor: appColors.primary,
+
+            borderBottomLeftRadius: 40,
+            borderBottomRightRadius: 40,
+            paddingTop: Platform.OS === 'android' ? 10 : 2,
+            paddingHorizontal: 16,
+          },
+          {height: headerHeight},
+        ]}>
         <RowComponent>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <HambergerMenu size={24} color={appColors.white} />
           </TouchableOpacity>
-          <View style={[{flex: 1, alignItems: 'center'}]}>
+          <ViewAnimated
+            style={[
+              {flex: 1, alignItems: 'center', paddingTop: 15},
+              ViewTextAnimation,
+            ]}>
             <RowComponent>
               <TextComponent
                 text="Hello "
@@ -141,33 +213,21 @@ const HomeScreen = ({navigation}: any) => {
                 }}
               />
             </RowComponent>
-          </View>
-
-          <CircleComponent color="#524CE0" size={36}>
-            <View>
-              <Notification size={20} color={appColors.white} />
-              <View
-                style={{
-                  backgroundColor: 'yellow',
-                  width: 8,
-                  height: 8,
-                  borderRadius: 100,
-                  borderWidth: 1,
-                  borderStartColor: appColors.gray,
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                }}></View>
-            </View>
-          </CircleComponent>
+          </ViewAnimated>
         </RowComponent>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <RowComponent>
-            <SearchNormal1
-              size={24}
-              color={appColors.white}
-              variant="TwoTone"
-            />
+        <ViewAnimated
+          style={[
+            {
+              flex: 1,
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              paddingHorizontal: 10,
+            },
+            {marginTop: marginTopAnimation},
+            ViewSeacrchAnimation,
+          ]}>
+          <RowComponent styles={{paddingBottom: 10}}>
+            <SearchNormal1 size={24} color={appColors.white} variant="Broken" />
             <View
               style={{
                 width: 1,
@@ -176,96 +236,219 @@ const HomeScreen = ({navigation}: any) => {
                 height: 20,
               }}
             />
+
+            <ViewAnimated
+              style={[
+                {
+                  flex: 1,
+
+                  minHeight: 36,
+                  marginLeft: 5,
+                  marginRight: 5,
+                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                  borderRadius: 100,
+                  left: -115,
+                },
+                seacrchAnimation,
+              ]}></ViewAnimated>
             <TextInput
-              style={[localStyles.input, globalStyle.text, {minHeight: 56}]}
+              style={[
+                localStyles.input,
+                globalStyle.text,
+                {
+                  flex: 1,
+                  minHeight: 36,
+                  marginLeft: 10,
+                  position: 'absolute',
+                  left: 30,
+                  paddingBottom: 10,
+                },
+              ]}
               value={Search}
               placeholder="Search..."
               placeholderTextColor={appColors.white}
               cursorColor={appColors.white}
             />
           </RowComponent>
-        </View>
-      </View>
-      <View style={[{flex: 1, backgroundColor: appColors.white, marginTop: 5}]}>
-        <SectionComponent>
-          <CardComponent>
-            <RowComponent>
-              <View style={{flex: 1}}>
-                <TextComponent
-                  text="Task progress"
-                  title
-                  styles={{fontFamily: fontFamilies.semiBold}}
-                />
-                <TextComponent text="30/40 tasks done " />
-                <SpaceComponent height={12} />
-                <RowComponent justiffy="flex-start">
-                  <TagComponent
-                    text="March 22"
-                    onPress={() => console.log('heeko')}
-                  />
+        </ViewAnimated>
+      </ViewAnimated>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        ref={scrollViewRef}
+        onScroll={e => {
+          const offsetY = e.nativeEvent.contentOffset.y;
+          scrollDirection.current =
+            offsetY - lastOffsetY.current > 0 ? 'down' : 'up';
+          lastOffsetY.current = offsetY;
+          animatedValue.setValue(offsetY);
+        }}
+        onScrollEndDrag={() => {
+          scrollViewRef.current?.scrollTo({
+            y: scrollDirection.current === 'down' ? 100 : 0,
+            animated: true,
+          });
+        }}>
+        <StatusBar barStyle={'dark-content'} />
+
+        <ContainerComponent isScroll isImageBackground>
+          <View style={[{flex: 1}]}>
+            <TextComponent
+              text="Tasks"
+              title
+              styles={{
+                fontFamily: fontFamilies.bold,
+                paddingLeft: 5,
+                marginBottom: 5,
+              }}
+            />
+            <SectionComponent>
+              <CardComponent>
+                <RowComponent>
+                  <View style={{flex: 1}}>
+                    <TextComponent
+                      text="Task progress"
+                      title
+                      styles={{fontFamily: fontFamilies.semiBold}}
+                    />
+                    <TextComponent text="30/40 tasks done " />
+                    <SpaceComponent height={12} />
+                    <RowComponent justiffy="flex-start">
+                      <TagComponent
+                        text="March 22"
+                        onPress={() => console.log('heeko')}
+                      />
+                    </RowComponent>
+                  </View>
+                  <View>
+                    <CicularComponent value={80} />
+                  </View>
                 </RowComponent>
-              </View>
-              <View>
-                <CicularComponent value={10} />
-              </View>
-            </RowComponent>
-          </CardComponent>
-        </SectionComponent>
-        <SectionComponent>
-          <RowComponent styles={{alignItems: 'flex-start'}}>
-            <View style={{flex: 1}}>
-              <CardimageComponent>
-                <TouchableOpacity style={[globalStyle.iconCard]}>
-                  <Edit2 size={20} color={appColors.white} />
-                </TouchableOpacity>
-                <TextComponent
-                  text="UX Design"
-                  title
-                  styles={{
-                    fontFamily: fontFamilies.semiBold,
-                    fontSize: 22,
-                  }}
-                />
-                <TextComponent text="Task Managements mobile app" size={16} />
-                <View style={{marginVertical: 24}}>
-                  <AvatarGroupComponent />
+              </CardComponent>
+            </SectionComponent>
+            <SpaceComponent height={10} />
+            <TextComponent
+              text="Group tasks"
+              title
+              styles={{
+                fontFamily: fontFamilies.bold,
+                paddingLeft: 5,
+                marginBottom: 5,
+              }}
+            />
+            <SectionComponent>
+              <RowComponent styles={{alignItems: 'flex-start'}}>
+                <View style={{flex: 1}}>
+                  <CardimageComponent>
+                    <TouchableOpacity style={[globalStyle.iconCard]}>
+                      <Edit2 size={20} color={appColors.white} />
+                    </TouchableOpacity>
+                    <TextComponent
+                      text="UX Design"
+                      title
+                      styles={{
+                        fontFamily: fontFamilies.semiBold,
+                        fontSize: 22,
+                      }}
+                    />
+                    <TextComponent text="Task Managements mobile app" />
+                    <View style={{marginVertical: 24}}>
+                      <AvatarGroupComponent />
+                      <ProgressBarComponent percent="60%" color="#37dcf6" />
+                    </View>
+                    <TagComponent
+                      text="2024 March 03"
+                      tagStyles={{marginHorizontal: -5}}
+                    />
+                  </CardimageComponent>
                 </View>
-                <TagComponent
-                  text="2024 March 03"
-                  tagStyles={{marginHorizontal: -5}}
-                />
-              </CardimageComponent>
-            </View>
-            <SpaceComponent width={16} />
-            <View style={{flex: 1}}>
-              <CardimageComponent color="rgba(215, 255, 145, 0.9)">
-                <TouchableOpacity style={[globalStyle.iconCard]}>
-                  <Edit2 size={20} color={appColors.white} />
-                </TouchableOpacity>
-                <TextComponent
-                  text="API Payment"
-                  title
-                  styles={{fontFamily: fontFamilies.semiBold, fontSize: 22}}
-                />
-                <AvatarGroupComponent />
-              </CardimageComponent>
-              <SpaceComponent height={16} />
-              <CardimageComponent color="rgba(164, 247, 255, 0.9)">
-                <TouchableOpacity style={[globalStyle.iconCard]}>
-                  <Edit2 size={20} color={appColors.white} />
-                </TouchableOpacity>
-                <TextComponent
-                  text="Update work"
-                  title
-                  styles={{fontFamily: fontFamilies.semiBold, fontSize: 22}}
-                />
-                <TextComponent text="Revision home page" size={16} />
-              </CardimageComponent>
-            </View>
-          </RowComponent>
-        </SectionComponent>
-      </View>
-    </View>
+                <SpaceComponent width={16} />
+                <View style={{flex: 1}}>
+                  <CardimageComponent color="rgba(215, 255, 145, 0.9)">
+                    <TouchableOpacity style={[globalStyle.iconCard]}>
+                      <Edit2 size={20} color={appColors.white} />
+                    </TouchableOpacity>
+                    <TextComponent
+                      text="API Payment"
+                      title
+                      styles={{fontFamily: fontFamilies.semiBold, fontSize: 22}}
+                    />
+                    <AvatarGroupComponent />
+                    <ProgressBarComponent percent="40%" color="#5663f7" />
+                  </CardimageComponent>
+                  <SpaceComponent height={16} />
+                  <CardimageComponent color="rgba(164, 247, 255, 0.9)">
+                    <TouchableOpacity style={[globalStyle.iconCard]}>
+                      <Edit2 size={20} color={appColors.white} />
+                    </TouchableOpacity>
+                    <TextComponent
+                      text="Update work"
+                      title
+                      styles={{fontFamily: fontFamilies.semiBold, fontSize: 22}}
+                    />
+                    <TextComponent text="Revision home page" />
+                  </CardimageComponent>
+                </View>
+              </RowComponent>
+            </SectionComponent>
+            <SpaceComponent height={10} />
+            <TextComponent
+              text="Urgent tasks"
+              title
+              styles={{
+                fontFamily: fontFamilies.bold,
+                paddingLeft: 5,
+                marginBottom: 5,
+              }}
+            />
+            <SectionComponent>
+              <CardComponent>
+                <RowComponent>
+                  <CicularComponent value={80} radius={36} />
+                  <View style={{flex: 1}}>
+                    <TextComponent
+                      text="Task progress"
+                      title
+                      styles={{fontFamily: fontFamilies.semiBold}}
+                    />
+                    <TextComponent
+                      text="30/40 tasks done "
+                      styles={{paddingLeft: 5}}
+                    />
+                    <SpaceComponent height={12} />
+                    <RowComponent justiffy="flex-end">
+                      <TagComponent
+                        text="March 22"
+                        onPress={() => console.log('heeko')}
+                        color={appColors.danger}
+                      />
+                    </RowComponent>
+                  </View>
+                </RowComponent>
+              </CardComponent>
+            </SectionComponent>
+          </View>
+        </ContainerComponent>
+      </ScrollView>
+      <TouchableOpacity style={{position: 'absolute', top: 50, right: 15}}>
+        <CircleComponent color="#524CE0" size={36}>
+          <View>
+            <Notification size={20} color={appColors.white} />
+            <View
+              style={{
+                backgroundColor: 'yellow',
+                width: 8,
+                height: 8,
+                borderRadius: 100,
+                borderWidth: 1,
+                borderStartColor: appColors.gray,
+                position: 'absolute',
+                top: 0,
+                right: 0,
+              }}></View>
+          </View>
+        </CircleComponent>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
@@ -284,5 +467,9 @@ const localStyles = StyleSheet.create({
     margin: 0,
     flex: 1,
     paddingHorizontal: 5,
+  },
+  search: {
+    position: 'absolute',
+    top: 0,
   },
 });
