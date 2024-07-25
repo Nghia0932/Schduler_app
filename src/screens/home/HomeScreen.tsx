@@ -4,7 +4,7 @@ import {
   Notification,
   SearchNormal1,
 } from 'iconsax-react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Image,
@@ -36,6 +36,7 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {authSelector} from '../../redux/reducers/authReducer';
 import {globalStyle} from '../../styles/globalStyles';
 import {ScrollView} from 'react-native';
+import {setIsCloseBottomTab} from '../../redux/reducers/bottomTabReducer';
 
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -67,8 +68,15 @@ const HomeScreen = ({navigation}: any) => {
       },
       {
         translateX: animatedValue.interpolate({
-          inputRange: [0, 20],
-          outputRange: [0, 50],
+          inputRange: [0, 50],
+          outputRange: [0, 30],
+          extrapolate: 'clamp',
+        }),
+      },
+      {
+        translateY: animatedValue.interpolate({
+          inputRange: [0, 80],
+          outputRange: [0, -47],
           extrapolate: 'clamp',
         }),
       },
@@ -119,13 +127,14 @@ const HomeScreen = ({navigation}: any) => {
     extrapolate: 'clamp', // Giới hạn giá trị trong khoảng 0-50
   });
   const marginTopAnimation = animatedValue.interpolate({
-    inputRange: [0, 80],
-    outputRange: [15, 25],
+    inputRange: [0, 30],
+    outputRange: [15, 20],
     extrapolate: 'clamp',
   });
 
   const TextInputAnimated = Animated.createAnimatedComponent(TextInput);
   const ViewAnimated = Animated.createAnimatedComponent(View);
+  const [scrollDirectionCurrent, setScrollDirectionCurrent] = useState(true);
 
   return (
     <SafeAreaView style={[globalStyle.container]}>
@@ -219,12 +228,29 @@ const HomeScreen = ({navigation}: any) => {
           style={[
             {
               flex: 1,
+              minHeight: 36,
+              marginLeft: 5,
+              marginRight: 5,
+              backgroundColor: 'rgba(255, 255, 255, 0.4)',
+              borderRadius: 100,
+              left: -10,
+              width: '80%',
+            },
+            seacrchAnimation,
+          ]}></ViewAnimated>
+        <ViewAnimated
+          style={[
+            {
+              flex: 1,
               alignItems: 'flex-start',
               justifyContent: 'center',
               paddingHorizontal: 10,
+              position: 'absolute',
+              left: 40,
+              bottom: 10,
             },
-            {marginTop: marginTopAnimation},
-            ViewSeacrchAnimation,
+
+            //ViewSeacrchAnimation,
           ]}>
           <RowComponent styles={{paddingBottom: 10}}>
             <SearchNormal1 size={24} color={appColors.white} variant="Broken" />
@@ -237,20 +263,6 @@ const HomeScreen = ({navigation}: any) => {
               }}
             />
 
-            <ViewAnimated
-              style={[
-                {
-                  flex: 1,
-
-                  minHeight: 36,
-                  marginLeft: 5,
-                  marginRight: 5,
-                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                  borderRadius: 100,
-                  left: -115,
-                },
-                seacrchAnimation,
-              ]}></ViewAnimated>
             <TextInput
               style={[
                 localStyles.input,
@@ -261,7 +273,7 @@ const HomeScreen = ({navigation}: any) => {
                   marginLeft: 10,
                   position: 'absolute',
                   left: 30,
-                  paddingBottom: 10,
+                  paddingBottom: 5,
                 },
               ]}
               value={Search}
@@ -279,6 +291,8 @@ const HomeScreen = ({navigation}: any) => {
           const offsetY = e.nativeEvent.contentOffset.y;
           scrollDirection.current =
             offsetY - lastOffsetY.current > 0 ? 'down' : 'up';
+          setScrollDirectionCurrent(offsetY - lastOffsetY.current > 0);
+
           lastOffsetY.current = offsetY;
           animatedValue.setValue(offsetY);
         }}
@@ -287,6 +301,11 @@ const HomeScreen = ({navigation}: any) => {
             y: scrollDirection.current === 'down' ? 100 : 0,
             animated: true,
           });
+          dispatch(
+            setIsCloseBottomTab(
+              scrollDirection.current === 'down' ? true : false,
+            ),
+          );
         }}>
         <StatusBar barStyle={'dark-content'} />
 

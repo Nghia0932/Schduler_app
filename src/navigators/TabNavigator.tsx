@@ -1,5 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {ReactNode, useState} from 'react';
+import React, {ReactNode, useEffect, useRef, useState} from 'react';
 
 import {
   AddSquare,
@@ -19,14 +19,31 @@ import ProfilesNavigator from './ProfilesNavigator';
 
 import {TextComponent} from '../components';
 import CalendarNavigator from './CalendarNavigator';
-import {View} from 'react-native';
+import {Animated, View} from 'react-native';
 import {globalStyle} from '../styles/globalStyles';
 import DrawerNavigator from './DrawerNavigator';
+import {useSelector} from 'react-redux';
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
-  const [isTabBarVisible, setIsTabBarVisible] = useState(true);
+  const isCloseBottomTab = useSelector(
+    (state: any) => state.bottomTabReducer.isCloseBottomTab,
+  );
+  const animatedValue = useRef(new Animated.Value(0)).current;
 
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: isCloseBottomTab ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [isCloseBottomTab]);
+
+  const tabBarTranslateY = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 66], // 66 là chiều cao của tab bar
+    extrapolate: 'clamp',
+  });
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -35,6 +52,7 @@ const TabNavigator = () => {
           height: 66,
           justifyContent: 'center',
           alignItems: 'center',
+          transform: [{translateY: tabBarTranslateY}],
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: appColors.gray,
@@ -125,12 +143,17 @@ const TabNavigator = () => {
           tabBarHideOnKeyboard: true,
         }}
       />
-      <Tab.Screen name="Calendar" component={CalendarNavigator} />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarNavigator}
+        options={{
+          tabBarHideOnKeyboard: true,
+        }}
+      />
       <Tab.Screen
         name="Add"
         component={AddNewScreen}
         options={{
-          //tabBarShowLabel: false,
           tabBarLabel: '',
         }}
       />
