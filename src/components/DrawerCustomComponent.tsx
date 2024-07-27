@@ -37,6 +37,7 @@ import {
 import {fontFamilies} from '../constants/fontFamilies';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import ContainerComponent from './ContainerComponent';
+import {setIsCloseBottomTab} from '../redux/reducers/bottomTabReducer';
 const DrawerCustom = ({navigation}: any) => {
   const dispatch = useDispatch();
   const user = useSelector(authSelector);
@@ -111,6 +112,7 @@ const DrawerCustom = ({navigation}: any) => {
         <View>
           <TouchableOpacity
             onPress={() => {
+              dispatch(setIsCloseBottomTab(false));
               navigation.closeDrawer();
               navigation.navigate('Profiles', {
                 screen: 'ProfilesScreen',
@@ -168,16 +170,24 @@ const DrawerCustom = ({navigation}: any) => {
                   ? () => handleSignOut()
                   : item.key === 'Calendar'
                   ? () => {
-                      navigation.navigate('Calendar', {
-                        screen: 'CalendarsScreen',
-                      });
+                      navigation.navigate(
+                        'Calendar',
+                        {
+                          screen: 'CalendarsScreen',
+                        },
+                        dispatch(setIsCloseBottomTab(false)),
+                      );
                       navigation.closeDrawer();
                     }
                   : item.key === 'my-profile'
                   ? () => {
-                      navigation.navigate('Profiles', {
-                        screen: 'ProfilesScreen',
-                      });
+                      navigation.navigate(
+                        'Profiles',
+                        {
+                          screen: 'ProfilesScreen',
+                        },
+                        dispatch(setIsCloseBottomTab(false)),
+                      );
                       navigation.closeDrawer();
                     }
                   : () => {

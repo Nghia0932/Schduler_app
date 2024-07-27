@@ -37,6 +37,7 @@ import {authSelector} from '../../redux/reducers/authReducer';
 import {globalStyle} from '../../styles/globalStyles';
 import {ScrollView} from 'react-native';
 import {setIsCloseBottomTab} from '../../redux/reducers/bottomTabReducer';
+import {scrollTo} from 'react-native-reanimated';
 
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -56,7 +57,9 @@ const HomeScreen = ({navigation}: any) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const lastOffsetY = useRef(0);
   const scrollDirection = useRef('');
-
+  const isCloseBottomTab = useSelector(
+    (state: any) => state.bottomTabReducer.isCloseBottomTab,
+  );
   const seacrchAnimation = {
     transform: [
       {
@@ -103,41 +106,42 @@ const HomeScreen = ({navigation}: any) => {
       extrapolate: 'clamp',
     }),
   };
-  const ViewSeacrchAnimation = {
-    transform: [
-      {
-        translateX: animatedValue.interpolate({
-          inputRange: [0, 80],
-          outputRange: [0, 40],
-          extrapolate: 'clamp',
-        }),
-      },
-      {
-        translateY: animatedValue.interpolate({
-          inputRange: [0, 100],
-          outputRange: [0, -50],
-          extrapolate: 'clamp',
-        }),
-      },
-    ],
-  };
+
   const headerHeight = animatedValue.interpolate({
-    inputRange: [0, 80], // Từ vị trí cuộn 0 đến 50
+    inputRange: [0, 70], // Từ vị trí cuộn 0 đến 50
     outputRange: [120, 70], // Chiều cao thay đổi từ 120 đến 50
     extrapolate: 'clamp', // Giới hạn giá trị trong khoảng 0-50
   });
-  const marginTopAnimation = animatedValue.interpolate({
-    inputRange: [0, 30],
-    outputRange: [15, 20],
-    extrapolate: 'clamp',
-  });
 
-  const TextInputAnimated = Animated.createAnimatedComponent(TextInput);
   const ViewAnimated = Animated.createAnimatedComponent(View);
-  const [scrollDirectionCurrent, setScrollDirectionCurrent] = useState(true);
+  const onScrollEndDrag = (event: any) => {
+    const contentOffsetY = event.nativeEvent.contentOffset.y;
+    const contentHeight = event.nativeEvent.contentSize.height;
+    const layoutHeight = event.nativeEvent.layoutMeasurement.height;
 
+    let targetY = 0;
+
+    // Điều chỉnh vị trí cuộn dựa trên các điều kiện của bạn
+    if (scrollDirection.current === 'down') {
+      targetY = contentOffsetY + 200; // Ví dụ: cuộn xuống thêm 200 điểm
+      if (targetY > contentHeight - layoutHeight) {
+        targetY = contentHeight - layoutHeight; // Giới hạn cuộn không vượt quá cuối cùng
+      }
+    } else if (scrollDirection.current === 'up') {
+      targetY = contentOffsetY - 200; // Ví dụ: cuộn lên thêm 200 điểm
+      if (targetY < 0) {
+        targetY = 0; // Giới hạn cuộn không vượt quá đầu trang
+      }
+    }
+
+    scrollViewRef.current?.scrollTo({
+      y: targetY,
+      animated: true,
+    });
+  };
   return (
     <SafeAreaView style={[globalStyle.container]}>
+      <StatusBar backgroundColor="rgba(39, 45, 45, 0.5)" translucent />
       <ViewAnimated
         style={[
           {
@@ -238,7 +242,7 @@ const HomeScreen = ({navigation}: any) => {
             },
             seacrchAnimation,
           ]}></ViewAnimated>
-        <ViewAnimated
+        <View
           style={[
             {
               flex: 1,
@@ -249,8 +253,6 @@ const HomeScreen = ({navigation}: any) => {
               left: 40,
               bottom: 10,
             },
-
-            //ViewSeacrchAnimation,
           ]}>
           <RowComponent styles={{paddingBottom: 10}}>
             <SearchNormal1 size={24} color={appColors.white} variant="Broken" />
@@ -282,34 +284,32 @@ const HomeScreen = ({navigation}: any) => {
               cursorColor={appColors.white}
             />
           </RowComponent>
-        </ViewAnimated>
+        </View>
       </ViewAnimated>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        ref={scrollViewRef}
+        //ref={scrollViewRef}
         onScroll={e => {
           const offsetY = e.nativeEvent.contentOffset.y;
           scrollDirection.current =
             offsetY - lastOffsetY.current > 0 ? 'down' : 'up';
-          setScrollDirectionCurrent(offsetY - lastOffsetY.current > 0);
-
           lastOffsetY.current = offsetY;
           animatedValue.setValue(offsetY);
-        }}
-        onScrollEndDrag={() => {
-          scrollViewRef.current?.scrollTo({
-            y: scrollDirection.current === 'down' ? 100 : 0,
-            animated: true,
-          });
           dispatch(
             setIsCloseBottomTab(
               scrollDirection.current === 'down' ? true : false,
             ),
           );
+        }}
+        onScrollEndDrag={e => {
+          scrollViewRef.current?.scrollTo({
+            //y:
+            //  scrollDirection.current === 'down' && lastOffsetY.current < 100
+            //    ? 100
+            //    : lastOffsetY.current,
+          });
         }}>
-        <StatusBar barStyle={'dark-content'} />
-
-        <ContainerComponent isScroll isImageBackground>
+        <ContainerComponent isImageBackground>
           <View style={[{flex: 1}]}>
             <TextComponent
               text="Tasks"
@@ -420,6 +420,54 @@ const HomeScreen = ({navigation}: any) => {
               }}
             />
             <SectionComponent>
+              <CardComponent>
+                <RowComponent>
+                  <CicularComponent value={80} radius={36} />
+                  <View style={{flex: 1}}>
+                    <TextComponent
+                      text="Task progress"
+                      title
+                      styles={{fontFamily: fontFamilies.semiBold}}
+                    />
+                    <TextComponent
+                      text="30/40 tasks done "
+                      styles={{paddingLeft: 5}}
+                    />
+                    <SpaceComponent height={12} />
+                    <RowComponent justiffy="flex-end">
+                      <TagComponent
+                        text="March 22"
+                        onPress={() => console.log('heeko')}
+                        color={appColors.danger}
+                      />
+                    </RowComponent>
+                  </View>
+                </RowComponent>
+              </CardComponent>
+              <CardComponent>
+                <RowComponent>
+                  <CicularComponent value={80} radius={36} />
+                  <View style={{flex: 1}}>
+                    <TextComponent
+                      text="Task progress"
+                      title
+                      styles={{fontFamily: fontFamilies.semiBold}}
+                    />
+                    <TextComponent
+                      text="30/40 tasks done "
+                      styles={{paddingLeft: 5}}
+                    />
+                    <SpaceComponent height={12} />
+                    <RowComponent justiffy="flex-end">
+                      <TagComponent
+                        text="March 22"
+                        onPress={() => console.log('heeko')}
+                        color={appColors.danger}
+                      />
+                    </RowComponent>
+                  </View>
+                </RowComponent>
+              </CardComponent>
               <CardComponent>
                 <RowComponent>
                   <CicularComponent value={80} radius={36} />

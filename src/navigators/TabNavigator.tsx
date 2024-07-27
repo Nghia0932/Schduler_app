@@ -23,6 +23,7 @@ import {Animated, View} from 'react-native';
 import {globalStyle} from '../styles/globalStyles';
 import DrawerNavigator from './DrawerNavigator';
 import {useSelector} from 'react-redux';
+import {setIsCloseBottomTab} from '../redux/reducers/bottomTabReducer';
 
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -52,8 +53,10 @@ const TabNavigator = () => {
           height: 66,
           justifyContent: 'center',
           alignItems: 'center',
+          display: isCloseBottomTab ? 'none' : 'flex',
           transform: [{translateY: tabBarTranslateY}],
         },
+
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: appColors.gray,
 
