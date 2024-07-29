@@ -1,5 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {ReactNode, useEffect, useRef, useState} from 'react';
+import React, {ReactNode, useEffect, useRef} from 'react';
 
 import {
   AddSquare,
@@ -8,25 +8,24 @@ import {
   Profile,
   ProfileTick,
 } from 'iconsax-react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {appColors} from '../constants/appColors';
-import {AddNewScreen, CalendarsScreen} from '../screens';
+import {AddNewScreen} from '../screens';
 import HomeNavigator from './HomeNavigator';
 import NotificationsScreen from './NotificationNavigator';
 import ProfilesNavigator from './ProfilesNavigator';
 
-import {TextComponent} from '../components';
-import CalendarNavigator from './CalendarNavigator';
 import {Animated, View} from 'react-native';
-import {globalStyle} from '../styles/globalStyles';
-import DrawerNavigator from './DrawerNavigator';
 import {useSelector} from 'react-redux';
-import {setIsCloseBottomTab} from '../redux/reducers/bottomTabReducer';
-
+import {TextComponent} from '../components';
+import {globalStyle} from '../styles/globalStyles';
+import CalendarNavigator from './CalendarNavigator';
+import AddButton from '../screens/home/AddButton';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
+
   const isCloseBottomTab = useSelector(
     (state: any) => state.bottomTabReducer.isCloseBottomTab,
   );
@@ -56,7 +55,6 @@ const TabNavigator = () => {
           display: isCloseBottomTab ? 'none' : 'flex',
           transform: [{translateY: tabBarTranslateY}],
         },
-
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: appColors.gray,
 
@@ -97,7 +95,7 @@ const TabNavigator = () => {
                 </View>
               );
               break;
-            case 'Notifications':
+            case 'Notification':
               icon = !focused ? (
                 <MaterialIcons
                   name="notifications-none"
@@ -158,9 +156,10 @@ const TabNavigator = () => {
         component={AddNewScreen}
         options={{
           tabBarLabel: '',
+          tabBarButton: () => <AddButton />,
         }}
       />
-      <Tab.Screen name="Notifications" component={NotificationsScreen} />
+      <Tab.Screen name="Notification" component={NotificationsScreen} />
       <Tab.Screen name="Profiles" component={ProfilesNavigator} />
     </Tab.Navigator>
   );

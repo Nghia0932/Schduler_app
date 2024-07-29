@@ -313,11 +313,6 @@ const CalendarScreen = () => {
               minHeight: 130,
               backgroundColor: 'rgba(194, 228, 253, 0.5)',
               borderRadius: 20,
-              //shadowColor: '#000',
-              //shadowOffset: {width: 0, height: 2},
-              //shadowOpacity: 0.4,
-              //shadowRadius: 5,
-              //elevation: 3,
             }}>
             <TextComponent
               text="Bạn có kế hoạch gì không ?"
@@ -355,7 +350,7 @@ const CalendarScreen = () => {
               <TouchableOpacity style={{marginHorizontal: 15}}>
                 <CircleComponent color="#dded9b" size={42}>
                   <View>
-                    <DocumentText size={20} color="yellow" />
+                    <DocumentText size={20} color="#6FDCE3" />
                   </View>
                 </CircleComponent>
                 <TextComponent text="Memo" styles={{marginTop: 5}} />
@@ -769,12 +764,6 @@ const styles = StyleSheet.create({
     height: 85,
     borderRadius: 10,
     margin: '0.5%',
-    backgroundColor: 'rgba(196, 227, 244, 0.5)',
-    //shadowColor: '#000',
-    //shadowOffset: {width: 0, height: 2},
-    //shadowOpacity: 0.3,
-    //shadowRadius: 3,
-    //elevation: 4,
   },
   rowComponent: {
     flexDirection: 'row',
