@@ -4,18 +4,18 @@ import {TextComponent} from '../components';
 import {appColors} from '../constants/appColors';
 
 interface Props {
-  visibale: boolean;
+  visiable: boolean;
   mess?: string;
   time?: number;
 }
 
 const LoadingModal = (props: Props) => {
-  const {visibale, mess, time} = props;
+  const {visiable, mess, time} = props;
   const [percentage, setPercentage] = useState(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (visibale && !intervalId) {
+    if (visiable && !intervalId) {
       const id = setInterval(
         () => {
           setPercentage(prevPercentage => {
@@ -26,14 +26,14 @@ const LoadingModal = (props: Props) => {
         time ? time : 1000,
       ); // Thay đổi giá trị này để điều chỉnh tốc độ tăng
       setIntervalId(id);
-    } else if (!visibale && intervalId) {
+    } else if (!visiable && intervalId) {
       clearInterval(intervalId);
       setIntervalId(null);
     }
-  }, [visibale, intervalId]);
+  }, [visiable, intervalId]);
 
   return (
-    <Modal visible={visibale} transparent statusBarTranslucent>
+    <Modal visible={visiable} transparent statusBarTranslucent>
       <View style={styles.modalContainer}>
         <ActivityIndicator color={appColors.white} size={100} />
         <TextComponent

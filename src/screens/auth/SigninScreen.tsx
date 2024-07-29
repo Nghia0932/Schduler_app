@@ -167,7 +167,7 @@ const SigninScreen = ({navigation}: any) => {
           </RowComponent>
         </SectionComponent>
       </ContainerComponent>
-      <LoadingModal visibale={isLoading} />
+      <LoadingModal visiable={isLoading} />
     </>
   );
 };

@@ -497,9 +497,9 @@ const HomeScreen = ({navigation}: any) => {
         </ContainerComponent>
       </ScrollView>
       <TouchableOpacity style={{position: 'absolute', top: 50, right: 15}}>
-        <CircleComponent color="#524CE0" size={36}>
+        <CircleComponent color="#1855c0" size={36}>
           <View>
-            <Notification size={20} color={appColors.white} />
+            <Notification size={20} color="yellow" />
             <View
               style={{
                 backgroundColor: 'yellow',

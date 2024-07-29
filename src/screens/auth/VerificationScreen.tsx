@@ -325,7 +325,7 @@ const VerificationScreen = ({navigation, route}: any) => {
           </RowComponent>
         )}
       </SectionComponent>
-      <LoadingModal visibale={isLoading} />
+      <LoadingModal visiable={isLoading} />
     </ContainerComponent>
   ) : (
     <ContainerComponent isImageBackground isScroll back>
@@ -392,7 +392,7 @@ const VerificationScreen = ({navigation, route}: any) => {
         />
       </SectionComponent>
 
-      <LoadingModal visibale={isLoading} />
+      <LoadingModal visiable={isLoading} />
     </ContainerComponent>
   );
 };

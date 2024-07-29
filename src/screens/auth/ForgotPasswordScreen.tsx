@@ -95,7 +95,7 @@ const ForgotPasswordScreen = ({navigation}: any) => {
           iconFlex="right"
         />
       </SectionComponent>
-      <LoadingModal visibale={isLoading} />
+      <LoadingModal visiable={isLoading} />
     </ContainerComponent>
   );
 };

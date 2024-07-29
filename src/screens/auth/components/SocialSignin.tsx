@@ -14,6 +14,7 @@ import {useDispatch} from 'react-redux';
 import {addAuth} from '../../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Settings} from 'react-native-fbsdk-next';
+import {LoadingModal} from '../../../modals';
 
 GoogleSignin.configure({
   webClientId:
@@ -49,20 +50,6 @@ const SocialSignin = () => {
     }
   };
 
-  const handleSignOutWithGoogle = async () => {
-    await GoogleSignin.hasPlayServices({
-      showPlayServicesUpdateDialog: true,
-    });
-
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signOut();
-      console.log(userInfo);
-    } catch (error) {
-      console.log('Sign out');
-    }
-  };
-
   return (
     <SectionComponent>
       <TextComponent
@@ -95,6 +82,7 @@ const SocialSignin = () => {
         textFont={fontFamilies.regular}
         iconFlex="left"
       />*/}
+      <LoadingModal visiable={isLoading} />
     </SectionComponent>
   );
 };
