@@ -17,7 +17,7 @@ import HomeNavigator from './HomeNavigator';
 import NotificationsScreen from './NotificationNavigator';
 import ProfilesNavigator from './ProfilesNavigator';
 
-import {Animated, View} from 'react-native';
+import {Animated, ScrollView, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {TextComponent} from '../components';
 import {globalStyle} from '../styles/globalStyles';

@@ -1,14 +1,16 @@
 import {
+  AddCircle,
   Edit2,
   HambergerMenu,
   Notification,
   SearchNormal1,
 } from 'iconsax-react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Animated,
   Image,
   Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
@@ -33,17 +35,21 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {AddTasksModal, LoadingModal} from '../../modals';
 import {authSelector} from '../../redux/reducers/authReducer';
-import {globalStyle} from '../../styles/globalStyles';
-import {ScrollView} from 'react-native';
 import {setIsCloseBottomTab} from '../../redux/reducers/bottomTabReducer';
-import {scrollTo} from 'react-native-reanimated';
-
+import {globalStyle} from '../../styles/globalStyles';
+import DatePicker from 'react-native-date-picker';
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
   const user = useSelector(authSelector);
   const [Search, setSearch] = useState('');
-
+  const [visiableLoadingModal, setVisiableLoadingModal] = useState(false);
+  const [visiableAddTasksModal, setVisiableAddTasksModal] = useState(false);
+  const [visiableAddGroupTasksModal, setVisiableAddGroupTasksModal] =
+    useState(false);
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
   function getInitials(fullname: string): string {
     const words = fullname.split(' ');
     let initials = '';
@@ -311,15 +317,24 @@ const HomeScreen = ({navigation}: any) => {
         }}>
         <ContainerComponent isImageBackground>
           <View style={[{flex: 1}]}>
-            <TextComponent
-              text="Tasks"
-              title
-              styles={{
-                fontFamily: fontFamilies.bold,
-                paddingLeft: 5,
-                marginBottom: 5,
-              }}
-            />
+            <RowComponent styles={{justifyContent: 'flex-start'}}>
+              <TextComponent
+                text="Tasks"
+                title
+                styles={{
+                  fontFamily: fontFamilies.bold,
+                  paddingLeft: 5,
+                  marginBottom: 5,
+                  marginRight: 10,
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setVisiableAddTasksModal(!visiableAddTasksModal);
+                }}>
+                <AddCircle size={26} color="green" />
+              </TouchableOpacity>
+            </RowComponent>
             <SectionComponent>
               <CardComponent>
                 <RowComponent>
@@ -345,15 +360,21 @@ const HomeScreen = ({navigation}: any) => {
               </CardComponent>
             </SectionComponent>
             <SpaceComponent height={10} />
-            <TextComponent
-              text="Group tasks"
-              title
-              styles={{
-                fontFamily: fontFamilies.bold,
-                paddingLeft: 5,
-                marginBottom: 5,
-              }}
-            />
+            <RowComponent styles={{justifyContent: 'flex-start'}}>
+              <TextComponent
+                text="Group tasks"
+                title
+                styles={{
+                  fontFamily: fontFamilies.bold,
+                  paddingLeft: 5,
+                  marginBottom: 5,
+                  marginRight: 10,
+                }}
+              />
+              <TouchableOpacity onPress={() => console.log('Add new Tasks')}>
+                <AddCircle size={26} color="green" />
+              </TouchableOpacity>
+            </RowComponent>
             <SectionComponent>
               <RowComponent styles={{alignItems: 'flex-start'}}>
                 <View style={{flex: 1}}>
@@ -515,6 +536,8 @@ const HomeScreen = ({navigation}: any) => {
           </View>
         </CircleComponent>
       </TouchableOpacity>
+      <LoadingModal visiable={visiableLoadingModal} />
+      <AddTasksModal visiableAddTasksModal={visiableAddTasksModal} />
     </SafeAreaView>
   );
 };

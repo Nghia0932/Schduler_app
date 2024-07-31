@@ -13,6 +13,7 @@ import CicularComponent from './CicularComponent';
 import CardimageComponent from './CardimageComponent';
 import AvatarGroupComponent from './AvatarGroupComponent';
 import ProgressBarComponent from './ProgressBarComponent';
+import DateTimePickerComponent from './DateTimePickerComponent';
 
 export {
   SpaceComponent,
@@ -30,4 +31,5 @@ export {
   CardimageComponent,
   AvatarGroupComponent,
   ProgressBarComponent,
+  DateTimePickerComponent,
 };

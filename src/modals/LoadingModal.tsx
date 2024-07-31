@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {TextComponent} from '../components';
 import {appColors} from '../constants/appColors';
 
+
 interface Props {
   visiable: boolean;
   mess?: string;

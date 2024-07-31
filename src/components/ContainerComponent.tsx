@@ -4,6 +4,8 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import React, {forwardRef, ReactNode} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -24,6 +26,7 @@ interface Props {
   onScroll?: (e: any) => void;
   onScrollEndDrag?: () => void;
   ref?: React.RefObject<ScrollView>;
+  styles?: StyleProp<ViewStyle>;
 }
 
 const ContainerComponent = (props: Props) => {
@@ -36,6 +39,7 @@ const ContainerComponent = (props: Props) => {
     onScroll,
     onScrollEndDrag,
     ref,
+    styles,
   } = props;
 
   const navigation: any = useNavigation();
@@ -44,13 +48,16 @@ const ContainerComponent = (props: Props) => {
       <View>
         {(title || back) && (
           <RowComponent
-            styles={{
-              paddingHorizontal: 16,
-              paddingVertical: 10,
-              minWidth: 48,
-              minHeight: 48,
-              justifyContent: 'flex-start',
-            }}>
+            styles={[
+              {
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+                minWidth: 48,
+                minHeight: 48,
+                justifyContent: 'flex-start',
+              },
+              styles,
+            ]}>
             {back && (
               <TouchableOpacity
                 onPress={() => navigation.goBack()}

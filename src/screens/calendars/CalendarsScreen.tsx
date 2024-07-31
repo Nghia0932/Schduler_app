@@ -323,7 +323,7 @@ const CalendarScreen = () => {
                 paddingTop: 8,
               }}
             />
-            <SpaceComponent height={25} />
+            <SpaceComponent height={15} />
             <RowComponent
               styles={{
                 justifyContent: 'center',
