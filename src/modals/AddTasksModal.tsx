@@ -9,6 +9,7 @@ import {
 } from 'iconsax-react-native';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
@@ -33,6 +34,9 @@ import {
 import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
 import DatePicker from 'react-native-date-picker';
+import {authSelector} from '../redux/reducers/authReducer';
+import {useSelector} from 'react-redux';
+import LoadingModal from './LoadingModal';
 
 interface Props {
   visiableAddTasksModal: boolean;
@@ -52,6 +56,7 @@ const AddTasksModal = (props: Props) => {
   const [values, setValues] = useState(initValue);
   const {visiableAddTasksModal} = props;
   const [visiable, setVisable] = useState(false);
+  const [visiableLoadingModal, setVisiableLoadingModal] = useState(false);
   const [visiableDateTimePicker, setVisiableDateTimePicker] = useState(false);
   const [mode, setMode] = useState<Mode>('date');
   const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -67,18 +72,66 @@ const AddTasksModal = (props: Props) => {
   const [tempDate, setTempDate] = useState(new Date());
   const [typeDateTime, setTypeDateTime] = useState('');
   const [newTodo, setNewTodo] = useState('');
+  const [colorCard, setColorCard] = useState('rgba(250, 199, 199, 0.9)');
   const [allday, setAllday] = useState(false);
+  const user = useSelector(authSelector);
+  const colors = [
+    'rgba(255, 0, 0,0.6)', // Red
+    'rgba(255, 165, 0,0.6)', // Orange
+    'rgba(255, 255, 0,0.6)', // Yellow
+    'rgba(0, 128, 0,0.6)', // Green
+    'rgba(0, 0, 255,0.6)', // Blue
+    'rgba(75, 0, 130,0.6)', // Indigo
+    'rgba(238, 130, 238,0.6)', // Violet
+    'rgba(165, 42, 42,0.6)', // Brown
+    'rgba(95, 158, 160,0.6)', // Cadet Blue
+    'rgba(255, 192, 203,0.6)', // Pink
+    'rgba(0, 255, 255,0.6)', // Cyan
+    'rgba(255, 20, 147,0.6)', // Deep Pink
+    'rgba(128, 128, 128,0.6)', // Gray
+    'rgba(173, 216, 230,0.6)', // Light Blue
+    'rgba(34, 139, 34,0.6)', // Forest Green
+    'rgba(255, 215, 0,0.6)', // Gold
+    'rgba(218, 112, 214,0.6)', // Orchid
+    'rgba(128, 0, 128,0.6)', // Purple
+    'rgba(240, 230, 140,0.6)', // Khaki
+    'rgba(255, 228, 181,0.6)', // Moccasin
+  ];
 
   const handleAddNewTask = async () => {
-    setIsLoading(true);
-    const api = 'addNewTask';
+    if (title.trim() === '') {
+      // Show an alert if the title is empty
+      Alert.alert('Error', 'Please enter the title !');
+      return; // Exit the function if title is empty
+    }
+    setVisiableLoadingModal(true);
+    const api = '/addNewTask';
     try {
-      const res = await taskAPI.HandleTask(api, {title, description}, 'post');
+      // Clean up the listTodo array
+      const cleanedListTodo = listTodo.filter(todo => todo.trim() !== '');
+
+      // Make the API call with cleaned listTodo
+      const res = await taskAPI.HandleTask(
+        api,
+        {
+          email: user.email,
+          title,
+          description,
+          colorCard,
+          dateStart,
+          dateEnd,
+          timeStart,
+          timeEnd,
+          listTodo: cleanedListTodo,
+        },
+        'post',
+      );
       console.log(res);
-      setIsLoading(false);
+      setVisiableLoadingModal(false);
+      handleCloseModal();
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
+      setVisiableLoadingModal(false);
     }
   };
 
@@ -89,6 +142,8 @@ const AddTasksModal = (props: Props) => {
     setNewTodo('');
     setVisable(false);
     getCurrentDateTime();
+    setAllday(false);
+    setColorCard('rgba(250, 199, 199, 0.9)');
   };
 
   const keyboardDidHideListener = Keyboard.addListener(
@@ -175,18 +230,23 @@ const AddTasksModal = (props: Props) => {
       }
     }
   };
-
+  const setAllDay = () => {
+    setTimeStart('00:00');
+    setTimeEnd('24:00');
+  };
+  const handleTodoChange = (text: any, index: any) => {
+    const newTodos = [...listTodo];
+    newTodos[index] = text;
+    setListTodo(newTodos);
+    // Nếu người dùng nhập vào TextInput cuối cùng, thêm một TextInput mới
+    if (index === listTodo.length - 1 && text.trim() !== '') {
+      setListTodo([...newTodos, '']);
+    }
+  };
   useEffect(() => {
     // Gọi hàm ngay lập tức
 
     getCurrentDateTime();
-    //// Thiết lập interval để cập nhật mỗi phút
-    //const intervalId = setInterval(() => {
-    //  getCurrentDateTime();
-    //}, 60000); // 60000ms = 1 phút
-
-    //// Dọn dẹp interval khi component bị hủy
-    //return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -205,22 +265,16 @@ const AddTasksModal = (props: Props) => {
       keyboardDidShowListener.remove();
     };
   }, []);
-
   //useEffect(() => {
-  //  console.log('Title:  ', title);
-  //  console.log('Description:  ', description);
-  //  console.log('listTodo: ', listTodo);
+  //  console.log('Title: ', title);
+  //  console.log('Description: ', description);
+  //  console.log('colorCard: ', colorCard);
+  //  console.log('DateStart: ', dateStart);
+  //  console.log('DateEnd: ', dateEnd);
+  //  console.log('TimeStart: ', timeStart);
+  //  console.log('timeEnd: ', timeEnd);
+  //  console.log('ListTodo: ', listTodo);
   //}, [listTodo]);
-
-  const handleTodoChange = (text: any, index: any) => {
-    const newTodos = [...listTodo];
-    newTodos[index] = text;
-    setListTodo(newTodos);
-    // Nếu người dùng nhập vào TextInput cuối cùng, thêm một TextInput mới
-    if (index === listTodo.length - 1 && text.trim() !== '') {
-      setListTodo([...newTodos, '']);
-    }
-  };
 
   return (
     <Modal
@@ -258,19 +312,21 @@ const AddTasksModal = (props: Props) => {
             />
             <TouchableOpacity
               onPress={() => {
-                setVisable(false);
+                handleAddNewTask();
               }}>
               <TickCircle size={34} color="green" />
             </TouchableOpacity>
           </RowComponent>
-          <View
+
+          <ScrollView
             style={{
+              flex: 1,
               width: '80%',
-              height: '20%',
+              maxHeight: '25%',
               alignSelf: 'center',
               borderRadius: 10,
-              backgroundColor: '#ffffff',
-              shadowColor: '#000',
+              backgroundColor: `${colorCard}`,
+              shadowColor: `${colorCard}`,
               shadowOffset: {width: 0, height: 2},
               shadowOpacity: 0.3,
               shadowRadius: 3,
@@ -278,12 +334,13 @@ const AddTasksModal = (props: Props) => {
               paddingHorizontal: 5,
             }}>
             <RowComponent styles={{justifyContent: 'space-between'}}>
-              <View>
+              <SectionComponent styles={{maxWidth: '90%'}}>
                 <TextInput
                   style={{
                     fontSize: 20,
-                    backgroundColor: appColors.white,
-                    minWidth: '70%',
+                    backgroundColor: 'transparent',
+                    minWidth: '50%',
+                    maxWidth: '90%',
                     marginBottom: -10,
                     color: appColors.text,
                   }}
@@ -291,31 +348,54 @@ const AddTasksModal = (props: Props) => {
                   placeholderTextColor={appColors.gray}
                   onChangeText={text => setTitle(text)}
                   value={title}
+                  multiline={true}
                   cursorColor={appColors.gray}
                 />
                 <TextInput
                   style={{
                     fontSize: 14,
-                    minWidth: '70%',
-                    backgroundColor: appColors.white,
+                    backgroundColor: 'transparent',
                     color: appColors.text,
                   }}
                   placeholder="Description"
                   placeholderTextColor={appColors.gray}
                   value={description}
+                  multiline={true}
                   onChangeText={text => setDescription(text)}
                   cursorColor={appColors.gray}
                   selectionHandleColor={appColors.text}
                 />
-              </View>
-              <TouchableOpacity>
+              </SectionComponent>
+              <TouchableOpacity
+                style={{position: 'absolute', top: 5, right: 5}}>
                 <SectionComponent>
                   <Colorfilter size={24} color={appColors.primary2} />
                   <TextComponent text="Color" color={appColors.gray} />
                 </SectionComponent>
               </TouchableOpacity>
             </RowComponent>
-          </View>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <View style={{flexDirection: 'row', paddingBottom: 10}}>
+                {colors.map((color, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setColorCard(color)}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                      backgroundColor: color,
+                      marginHorizontal: 5,
+                      borderWidth: 1,
+                    }}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          </ScrollView>
+
           <SpaceComponent height={10} />
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -361,7 +441,9 @@ const AddTasksModal = (props: Props) => {
                     }}
                     thumbColor={appColors.white}
                     value={allday}
-                    onChange={() => setAllday(!allday)}
+                    onChange={() => {
+                      setAllday(!allday), setAllDay();
+                    }}
                   />
                 </RowComponent>
                 <SectionComponent>
@@ -384,12 +466,7 @@ const AddTasksModal = (props: Props) => {
                         />
                       </RowComponent>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setVisiableDateTimePicker(true);
-                        setMode('time');
-                        setTypeDateTime('timeStart');
-                      }}>
+                    {allday ? (
                       <RowComponent>
                         <Entypo
                           name="clock"
@@ -402,10 +479,34 @@ const AddTasksModal = (props: Props) => {
                             fontSize: 16,
                             fontFamily: fontFamilies.semiBold,
                             paddingHorizontal: '2%',
+                            color: appColors.gray2,
                           }}
                         />
                       </RowComponent>
-                    </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setVisiableDateTimePicker(true);
+                          setMode('time');
+                          setTypeDateTime('timeStart');
+                        }}>
+                        <RowComponent>
+                          <Entypo
+                            name="clock"
+                            size={20}
+                            color={appColors.gray}
+                          />
+                          <TextComponent
+                            text={`${timeStart}`}
+                            styles={{
+                              fontSize: 16,
+                              fontFamily: fontFamilies.semiBold,
+                              paddingHorizontal: '2%',
+                            }}
+                          />
+                        </RowComponent>
+                      </TouchableOpacity>
+                    )}
                   </RowComponent>
                 </SectionComponent>
                 <SectionComponent>
@@ -428,12 +529,7 @@ const AddTasksModal = (props: Props) => {
                         />
                       </RowComponent>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setVisiableDateTimePicker(true);
-                        setMode('time');
-                        setTypeDateTime('timeEnd');
-                      }}>
+                    {allday ? (
                       <RowComponent>
                         <Entypo
                           name="clock"
@@ -446,10 +542,34 @@ const AddTasksModal = (props: Props) => {
                             fontSize: 16,
                             fontFamily: fontFamilies.semiBold,
                             paddingHorizontal: '2%',
+                            color: appColors.gray2,
                           }}
                         />
                       </RowComponent>
-                    </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setVisiableDateTimePicker(true);
+                          setMode('time');
+                          setTypeDateTime('timeEnd');
+                        }}>
+                        <RowComponent>
+                          <Entypo
+                            name="clock"
+                            size={20}
+                            color={appColors.gray}
+                          />
+                          <TextComponent
+                            text={`${timeEnd}`}
+                            styles={{
+                              fontSize: 16,
+                              fontFamily: fontFamilies.semiBold,
+                              paddingHorizontal: '2%',
+                            }}
+                          />
+                        </RowComponent>
+                      </TouchableOpacity>
+                    )}
                   </RowComponent>
                 </SectionComponent>
                 <View
@@ -517,6 +637,7 @@ const AddTasksModal = (props: Props) => {
                 onDateChange={val => {
                   setTempDate(val);
                 }}
+                dividerColor={appColors.text}
               />
             </View>
             <View
@@ -543,7 +664,7 @@ const AddTasksModal = (props: Props) => {
                 <TextComponent
                   text="Okay"
                   styles={{
-                    fontFamily: fontFamilies.semiBold,
+                    fontFamily: fontFamilies.bold,
                     fontSize: 18,
                     paddingLeft: '40%',
                     paddingTop: '10%',
@@ -568,7 +689,7 @@ const AddTasksModal = (props: Props) => {
                 <TextComponent
                   text="Cancel"
                   styles={{
-                    fontFamily: fontFamilies.semiBold,
+                    fontFamily: fontFamilies.bold,
                     fontSize: 18,
                     paddingLeft: '25%',
                     paddingTop: '10%',
@@ -581,6 +702,7 @@ const AddTasksModal = (props: Props) => {
           </View>
         </Modal>
       </View>
+      <LoadingModal visiable={visiableLoadingModal} />
     </Modal>
   );
 };
@@ -597,7 +719,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255,1)',
+    backgroundColor: appColors.gray5,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: '8%',
