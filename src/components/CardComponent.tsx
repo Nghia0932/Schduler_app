@@ -15,7 +15,11 @@ const CardComponent = (props: Props) => {
     <View
       style={[
         globalStyle.inputContainer,
-        {padding: 12, backgroundColor: bgColor ?? appColors.green},
+        {
+          paddingHorizontal: 5,
+          paddingVertical: 5,
+          backgroundColor: bgColor ?? appColors.green,
+        },
         styles,
       ]}>
       {children}

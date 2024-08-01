@@ -1,13 +1,15 @@
 import {
   AddCircle,
+  Clock,
   Edit2,
   HambergerMenu,
   Notification,
   SearchNormal1,
 } from 'iconsax-react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
+  FlatList,
   Image,
   Platform,
   ScrollView,
@@ -39,7 +41,7 @@ import {AddTasksModal, LoadingModal} from '../../modals';
 import {authSelector} from '../../redux/reducers/authReducer';
 import {setIsCloseBottomTab} from '../../redux/reducers/bottomTabReducer';
 import {globalStyle} from '../../styles/globalStyles';
-import DatePicker from 'react-native-date-picker';
+import taskAPI from '../../apis/taskApi';
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
   const user = useSelector(authSelector);
@@ -48,8 +50,13 @@ const HomeScreen = ({navigation}: any) => {
   const [visiableAddTasksModal, setVisiableAddTasksModal] = useState(false);
   const [visiableAddGroupTasksModal, setVisiableAddGroupTasksModal] =
     useState(false);
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
+  const [allTask, setAllTask] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (user.email) {
+      handleGetAllTask(user.email);
+    }
+  }, [user.email]);
   function getInitials(fullname: string): string {
     const words = fullname.split(' ');
     let initials = '';
@@ -63,6 +70,23 @@ const HomeScreen = ({navigation}: any) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const lastOffsetY = useRef(0);
   const scrollDirection = useRef('');
+
+  const handleGetAllTask = async (email: string) => {
+    setVisiableLoadingModal(true); // Show loading modal
+    try {
+      const response = await taskAPI.HandleTask('/getAllTask', {email}, 'post');
+      if (response.data) {
+        setAllTask(response.data.data);
+        console.log(allTask[1]);
+      } else {
+        console.log('No tasks found');
+      }
+    } catch (error) {
+      console.log('Error fetching tasks: ', error);
+    }
+    setVisiableLoadingModal(false); // Hide loading modal
+  };
+
   const isCloseBottomTab = useSelector(
     (state: any) => state.bottomTabReducer.isCloseBottomTab,
   );
@@ -120,31 +144,151 @@ const HomeScreen = ({navigation}: any) => {
   });
 
   const ViewAnimated = Animated.createAnimatedComponent(View);
-  const onScrollEndDrag = (event: any) => {
-    const contentOffsetY = event.nativeEvent.contentOffset.y;
-    const contentHeight = event.nativeEvent.contentSize.height;
-    const layoutHeight = event.nativeEvent.layoutMeasurement.height;
 
-    let targetY = 0;
+  const renderTaskItem = ({item}: any) => (
+    <TouchableOpacity>
+      <CardComponent
+        bgColor={`${item.colorCard}`}
+        styles={{borderWidth: 1, marginVertical: 5}}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: `${item.colorCard}`,
+            borderRadius: 10,
+          }}>
+          <RowComponent styles={{justifyContent: 'space-between'}}>
+            <View style={{maxWidth: '80%'}}>
+              <TextComponent
+                text={item.title}
+                title
+                styles={{
+                  fontFamily: fontFamilies.bold,
+                  fontSize: 20,
+                  paddingHorizontal: 5,
+                }}
+              />
+              <TextComponent
+                text={item.description}
+                styles={{paddingHorizontal: 5}}
+              />
+            </View>
+            {item.listTodo.length !== 0 ? (
+              <CicularComponent value={item.progress} radius={30} />
+            ) : (
+              <View></View>
+            )}
+          </RowComponent>
+          <SpaceComponent height={15} />
+          <RowComponent
+            styles={{justifyContent: 'space-between', paddingHorizontal: 5}}>
+            <TextComponent text={`Due: ${item.dateEnd}`} />
+            <RowComponent>
+              <Clock size={12} color={appColors.text} />
+              <TextComponent text={` ${item.timeEnd}`} />
+            </RowComponent>
+          </RowComponent>
+        </View>
+      </CardComponent>
+    </TouchableOpacity>
+  );
+  const renderUrgentTaskItem = ({item}: any) => {
+    const now = new Date();
+    const [day, month, year] = item.dateEnd.split('-').map(Number);
+    const [endHour, endMinute] = item.timeEnd.split(':').map(Number);
 
-    // Điều chỉnh vị trí cuộn dựa trên các điều kiện của bạn
-    if (scrollDirection.current === 'down') {
-      targetY = contentOffsetY + 200; // Ví dụ: cuộn xuống thêm 200 điểm
-      if (targetY > contentHeight - layoutHeight) {
-        targetY = contentHeight - layoutHeight; // Giới hạn cuộn không vượt quá cuối cùng
+    // Create a Date object for end date with the specified time
+    const endDate = new Date(year, month - 1, day);
+    // Check if the end date is today
+    const isYesterday = endDate < now;
+    const isToday = endDate.toDateString() === now.toDateString();
+    let remainingTime: string;
+    if (isToday) {
+      const nowHours = now.getHours();
+      const nowMinutes = now.getMinutes();
+      // Calculate time difference in milliseconds
+      const timeDifference =
+        endHour * 60 + endMinute - (nowHours * 60 + nowMinutes);
+
+      if (timeDifference > 0) {
+        // Time is still remaining
+        const remainingHours = Math.floor(timeDifference / 60);
+        const remainingMinutes = Math.floor(timeDifference % 60);
+        remainingTime = `${Math.max(0, remainingHours)}h ${Math.max(
+          0,
+          remainingMinutes,
+        )}m left`;
+      } else {
+        // Time is overdue
+        const overdueHours = Math.floor(-timeDifference / 60);
+        const overdueMinutes = Math.floor(-timeDifference % 60);
+        remainingTime = `limit ${Math.max(0, overdueHours)}h  ${Math.max(
+          0,
+          overdueMinutes,
+        )}m`;
       }
-    } else if (scrollDirection.current === 'up') {
-      targetY = contentOffsetY - 200; // Ví dụ: cuộn lên thêm 200 điểm
-      if (targetY < 0) {
-        targetY = 0; // Giới hạn cuộn không vượt quá đầu trang
-      }
+    } else if (isYesterday) {
+      // If not today, calculate the difference in days
+      const remainingDays = Math.floor(
+        (now.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      remainingTime = `${Math.max(0, remainingDays)} days ago`;
+    } else {
+      return null;
     }
 
-    scrollViewRef.current?.scrollTo({
-      y: targetY,
-      animated: true,
-    });
+    if (!isToday && item.listTodo.length === 0 && !isYesterday) {
+      // If the end date is in the future and no todo items, do not render the CardComponent
+      return null;
+    }
+
+    return (
+      <TouchableOpacity>
+        <CardComponent
+          bgColor={`${item.colorCard}`}
+          styles={{borderWidth: 1, marginVertical: 5}}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: `${item.colorCard}`,
+              borderRadius: 10,
+            }}>
+            <RowComponent styles={{justifyContent: 'space-between'}}>
+              <View style={{maxWidth: '80%'}}>
+                <TextComponent
+                  text={item.title}
+                  title
+                  styles={{
+                    fontFamily: fontFamilies.bold,
+                    fontSize: 20,
+                    paddingHorizontal: 5,
+                  }}
+                />
+                <TextComponent
+                  text={item.description}
+                  styles={{paddingHorizontal: 5}}
+                />
+              </View>
+              {item.listTodo.length !== 0 ? (
+                <CicularComponent value={item.progress} radius={30} />
+              ) : (
+                <View></View>
+              )}
+            </RowComponent>
+            <SpaceComponent height={15} />
+            <RowComponent
+              styles={{justifyContent: 'space-between', paddingHorizontal: 5}}>
+              <TextComponent text={`Due: ${item.dateEnd}`} />
+              <RowComponent>
+                <Clock size={12} color={appColors.text} />
+                <TextComponent text={` ${remainingTime}`} />
+              </RowComponent>
+            </RowComponent>
+          </View>
+        </CardComponent>
+      </TouchableOpacity>
+    );
   };
+
   return (
     <SafeAreaView style={[globalStyle.container]}>
       <StatusBar backgroundColor="rgba(39, 45, 45, 0.5)" translucent />
@@ -336,28 +480,12 @@ const HomeScreen = ({navigation}: any) => {
               </TouchableOpacity>
             </RowComponent>
             <SectionComponent>
-              <CardComponent>
-                <RowComponent>
-                  <View style={{flex: 1}}>
-                    <TextComponent
-                      text="Task progress"
-                      title
-                      styles={{fontFamily: fontFamilies.semiBold}}
-                    />
-                    <TextComponent text="30/40 tasks done " />
-                    <SpaceComponent height={12} />
-                    <RowComponent justiffy="flex-start">
-                      <TagComponent
-                        text="March 22"
-                        onPress={() => console.log('heeko')}
-                      />
-                    </RowComponent>
-                  </View>
-                  <View>
-                    <CicularComponent value={80} />
-                  </View>
-                </RowComponent>
-              </CardComponent>
+              <FlatList
+                scrollEnabled={false}
+                data={allTask}
+                renderItem={renderTaskItem}
+                keyExtractor={item => item._id}
+              />
             </SectionComponent>
             <SpaceComponent height={10} />
             <RowComponent styles={{justifyContent: 'flex-start'}}>
@@ -441,78 +569,12 @@ const HomeScreen = ({navigation}: any) => {
               }}
             />
             <SectionComponent>
-              <CardComponent>
-                <RowComponent>
-                  <CicularComponent value={80} radius={36} />
-                  <View style={{flex: 1}}>
-                    <TextComponent
-                      text="Task progress"
-                      title
-                      styles={{fontFamily: fontFamilies.semiBold}}
-                    />
-                    <TextComponent
-                      text="30/40 tasks done "
-                      styles={{paddingLeft: 5}}
-                    />
-                    <SpaceComponent height={12} />
-                    <RowComponent justiffy="flex-end">
-                      <TagComponent
-                        text="March 22"
-                        onPress={() => console.log('heeko')}
-                        color={appColors.danger}
-                      />
-                    </RowComponent>
-                  </View>
-                </RowComponent>
-              </CardComponent>
-              <CardComponent>
-                <RowComponent>
-                  <CicularComponent value={80} radius={36} />
-                  <View style={{flex: 1}}>
-                    <TextComponent
-                      text="Task progress"
-                      title
-                      styles={{fontFamily: fontFamilies.semiBold}}
-                    />
-                    <TextComponent
-                      text="30/40 tasks done "
-                      styles={{paddingLeft: 5}}
-                    />
-                    <SpaceComponent height={12} />
-                    <RowComponent justiffy="flex-end">
-                      <TagComponent
-                        text="March 22"
-                        onPress={() => console.log('heeko')}
-                        color={appColors.danger}
-                      />
-                    </RowComponent>
-                  </View>
-                </RowComponent>
-              </CardComponent>
-              <CardComponent>
-                <RowComponent>
-                  <CicularComponent value={80} radius={36} />
-                  <View style={{flex: 1}}>
-                    <TextComponent
-                      text="Task progress"
-                      title
-                      styles={{fontFamily: fontFamilies.semiBold}}
-                    />
-                    <TextComponent
-                      text="30/40 tasks done "
-                      styles={{paddingLeft: 5}}
-                    />
-                    <SpaceComponent height={12} />
-                    <RowComponent justiffy="flex-end">
-                      <TagComponent
-                        text="March 22"
-                        onPress={() => console.log('heeko')}
-                        color={appColors.danger}
-                      />
-                    </RowComponent>
-                  </View>
-                </RowComponent>
-              </CardComponent>
+              <FlatList
+                scrollEnabled={false}
+                data={allTask}
+                renderItem={renderUrgentTaskItem}
+                keyExtractor={item => item._id}
+              />
             </SectionComponent>
           </View>
         </ContainerComponent>
